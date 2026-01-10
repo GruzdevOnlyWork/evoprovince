@@ -1,3 +1,4 @@
+import type React from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -5,58 +6,41 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { Check, Dumbbell, Users, Trophy, Target } from "lucide-react"
+import { createClient } from "@/lib/supabase/server"
 
-const services = [
-  {
-    icon: Dumbbell,
-    title: "Индивидуальные тренировки",
-    description: "Персональный подход к каждому спортсмену с учетом уровня подготовки и целей",
-    price: "от 1000 ₽",
-    features: [
-      "Персональная программа тренировок",
-      "Анализ техники выполнения упражнений",
-      "Консультации по питанию",
-      "Гибкий график занятий",
-    ],
-    popular: false,
-  },
-  {
-    icon: Users,
-    title: "Групповые занятия",
-    description: "Тренировки в команде единомышленников под руководством опытных тренеров",
-    price: "от 500 ₽",
-    features: ["Групповая мотивация", "Разминка и заминка", "Базовая и продвинутая программы", "Дружеская атмосфера"],
-    popular: true,
-  },
-  {
-    icon: Trophy,
-    title: "Подготовка к турнирам",
-    description: "Профессиональная подготовка к соревнованиям любого уровня",
-    price: "от 1500 ₽",
-    features: [
-      "Тренировка соревновательных элементов",
-      "Работа над выносливостью",
-      "Психологическая подготовка",
-      "Анализ выступлений",
-    ],
-    popular: false,
-  },
-  {
-    icon: Target,
-    title: "Мастер-классы",
-    description: "Специализированные занятия по изучению сложных элементов и техник",
-    price: "от 700 ₽",
-    features: [
-      "Изучение продвинутых элементов",
-      "Занятия с приглашенными спортсменами",
-      "Видеоанализ техники",
-      "Практические советы от профи",
-    ],
-    popular: false,
-  },
-]
+interface Service {
+  id: string
+  icon: string
+  title: string
+  description: string
+  price: string
+  features: string[]
+  is_popular: boolean
+  sort_order: number
+}
 
-export default function ServicesPage() {
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  dumbbell: Dumbbell,
+  users: Users,
+  trophy: Trophy,
+  target: Target,
+}
+
+async function getServices() {
+  const supabase = await createClient()
+  const { data, error } = await supabase.from("services").select("*").order("sort_order")
+
+  if (error) {
+    console.error("[v0] Error fetching services:", error)
+    return []
+  }
+
+  return data as Service[]
+}
+
+export default async function ServicesPage() {
+  const services = await getServices()
+
   return (
     <>
       <Header />
@@ -70,11 +54,14 @@ export default function ServicesPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {services.map((service, idx) => {
-              const Icon = service.icon
+            {services.map((service) => {
+              const Icon = iconMap[service.icon] || Dumbbell
               return (
-                <Card key={idx} className={`relative ${service.popular ? "border-primary border-2 shadow-lg" : ""}`}>
-                  {service.popular && (
+                <Card
+                  key={service.id}
+                  className={`relative ${service.is_popular ? "border-primary border-2 shadow-lg" : ""}`}
+                >
+                  {service.is_popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                       <Badge className="bg-primary text-primary-foreground px-4 py-1">Популярное</Badge>
                     </div>
@@ -98,7 +85,7 @@ export default function ServicesPage() {
                     </ul>
                   </CardContent>
                   <CardFooter>
-                    <Button asChild className="w-full" variant={service.popular ? "default" : "outline"}>
+                    <Button asChild className="w-full" variant={service.is_popular ? "default" : "outline"}>
                       <Link href="/contact">Записаться</Link>
                     </Button>
                   </CardFooter>
@@ -106,6 +93,14 @@ export default function ServicesPage() {
               )
             })}
           </div>
+
+          {services.length === 0 && (
+            <Card className="max-w-2xl mx-auto">
+              <CardContent className="py-12 text-center text-muted-foreground">
+                Информация об услугах временно недоступна
+              </CardContent>
+            </Card>
+          )}
 
           <div className="max-w-6xl mx-auto mt-16">
             <Card className="bg-secondary text-secondary-foreground">

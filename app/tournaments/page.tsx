@@ -6,83 +6,56 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Calendar, MapPin, Users, Trophy, Medal } from "lucide-react"
 import Link from "next/link"
+import { createClient } from "@/lib/supabase/server"
 
-const upcomingTournaments = [
-  {
-    id: 1,
-    title: "Кубок области по воркауту 2025",
-    date: "15 января 2025",
-    location: "Центральный стадион",
-    participants: "До 50 участников",
-    image: "/regional-workout-cup-competition-venue.jpg",
-    description: "Главное соревнование региона среди любителей и профессионалов воркаута",
-    status: "Регистрация открыта",
-    statusType: "success",
-  },
-  {
-    id: 2,
-    title: "Открытый турнир Эволюция",
-    date: "3 февраля 2025",
-    location: "Площадка 'Эволюция'",
-    participants: "Без ограничений",
-    image: "/open-tournament-street-workout-competition.jpg",
-    description: "Открытый турнир для всех желающих показать свои навыки",
-    status: "Скоро регистрация",
-    statusType: "warning",
-  },
-  {
-    id: 3,
-    title: "Чемпионат города",
-    date: "12 марта 2025",
-    location: "Спорткомплекс 'Олимп'",
-    participants: "До 30 участников",
-    image: "/city-championship-workout-athletes.jpg",
-    description: "Городской чемпионат по воркауту среди спортсменов всех категорий",
-    status: "Готовится",
-    statusType: "default",
-  },
-]
+interface Tournament {
+  id: string
+  title: string
+  description: string
+  date: string
+  location: string
+  participants: string | null
+  image_url: string | null
+  status: string
+  status_type: string
+  is_past: boolean
+}
 
-const pastTournaments = [
-  {
-    id: 1,
-    title: "Осенний марафон 2024",
-    date: "20 октября 2024",
-    location: "Площадка 'Эволюция'",
-    image: "/autumn-marathon-workout-competition-results.jpg",
-    winners: [
-      { place: 1, name: "Алексей Иванов", team: "Эволюция провинции" },
-      { place: 2, name: "Дмитрий Соколов", team: "Городские гимнасты" },
-      { place: 3, name: "Михаил Петров", team: "Эволюция провинции" },
-    ],
-  },
-  {
-    id: 2,
-    title: "Летний кубок 2024",
-    date: "15 июля 2024",
-    location: "Центральный парк",
-    image: "/summer-cup-outdoor-workout-event.jpg",
-    winners: [
-      { place: 1, name: "Сергей Смирнов", team: "Эволюция провинции" },
-      { place: 2, name: "Андрей Козлов", team: "Турник-клуб" },
-      { place: 3, name: "Игорь Волков", team: "Стрит-спорт" },
-    ],
-  },
-  {
-    id: 3,
-    title: "Весенний старт 2024",
-    date: "25 апреля 2024",
-    location: "Стадион 'Юность'",
-    image: "/spring-start-competition-street-workout.jpg",
-    winners: [
-      { place: 1, name: "Дмитрий Петров", team: "Эволюция провинции" },
-      { place: 2, name: "Максим Федоров", team: "Силовые ребята" },
-      { place: 3, name: "Владимир Орлов", team: "Городские гимнасты" },
-    ],
-  },
-]
+interface Winner {
+  id: string
+  tournament_id: string
+  place: number
+  name: string
+  team: string
+}
 
-export default function TournamentsPage() {
+async function getTournaments() {
+  const supabase = await createClient()
+
+  const [tournamentsResult, winnersResult] = await Promise.all([
+    supabase.from("tournaments").select("*").order("date", { ascending: false }),
+    supabase.from("tournament_winners").select("*").order("place"),
+  ])
+
+  if (tournamentsResult.error) {
+    console.error("[v0] Error fetching tournaments:", tournamentsResult.error)
+  }
+  if (winnersResult.error) {
+    console.error("[v0] Error fetching winners:", winnersResult.error)
+  }
+
+  return {
+    tournaments: (tournamentsResult.data || []) as Tournament[],
+    winners: (winnersResult.data || []) as Winner[],
+  }
+}
+
+export default async function TournamentsPage() {
+  const { tournaments, winners } = await getTournaments()
+
+  const upcomingTournaments = tournaments.filter((t) => !t.is_past)
+  const pastTournaments = tournaments.filter((t) => t.is_past)
+
   return (
     <>
       <Header />
@@ -107,7 +80,7 @@ export default function TournamentsPage() {
                   {upcomingTournaments.map((tournament) => (
                     <Card key={tournament.id} className="flex flex-col">
                       <img
-                        src={tournament.image || "/placeholder.svg"}
+                        src={tournament.image_url || "/placeholder.svg?height=192&width=400&query=workout tournament"}
                         alt={tournament.title}
                         className="w-full h-48 object-cover rounded-t-lg"
                         loading="lazy"
@@ -116,13 +89,13 @@ export default function TournamentsPage() {
                         <div className="mb-2">
                           <Badge
                             variant={
-                              tournament.statusType === "success"
+                              tournament.status_type === "success"
                                 ? "default"
-                                : tournament.statusType === "warning"
+                                : tournament.status_type === "warning"
                                   ? "secondary"
                                   : "outline"
                             }
-                            className={tournament.statusType === "success" ? "bg-primary" : ""}
+                            className={tournament.status_type === "success" ? "bg-primary" : ""}
                           >
                             {tournament.status}
                           </Badge>
@@ -134,16 +107,18 @@ export default function TournamentsPage() {
                         <div className="space-y-3">
                           <div className="flex items-center gap-2 text-sm">
                             <Calendar className="h-4 w-4 text-primary" />
-                            <span>{tournament.date}</span>
+                            <span>{new Date(tournament.date).toLocaleDateString("ru-RU")}</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm">
                             <MapPin className="h-4 w-4 text-primary" />
                             <span>{tournament.location}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-sm">
-                            <Users className="h-4 w-4 text-primary" />
-                            <span>{tournament.participants}</span>
-                          </div>
+                          {tournament.participants && (
+                            <div className="flex items-center gap-2 text-sm">
+                              <Users className="h-4 w-4 text-primary" />
+                              <span>{tournament.participants}</span>
+                            </div>
+                          )}
                         </div>
                       </CardContent>
                       <CardFooter>
@@ -154,70 +129,98 @@ export default function TournamentsPage() {
                     </Card>
                   ))}
                 </div>
+
+                {upcomingTournaments.length === 0 && (
+                  <Card>
+                    <CardContent className="py-12 text-center text-muted-foreground">
+                      Нет предстоящих турниров. Следите за обновлениями!
+                    </CardContent>
+                  </Card>
+                )}
               </TabsContent>
 
               <TabsContent value="past">
                 <div className="space-y-8">
-                  {pastTournaments.map((tournament) => (
-                    <Card key={tournament.id}>
-                      <div className="md:flex">
-                        <div className="md:w-2/5">
-                          <img
-                            src={tournament.image || "/placeholder.svg"}
-                            alt={tournament.title}
-                            className="w-full h-64 md:h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-tr-none"
-                            loading="lazy"
-                          />
-                        </div>
-                        <div className="md:w-3/5">
-                          <CardHeader>
-                            <CardTitle className="text-2xl text-balance">{tournament.title}</CardTitle>
-                            <CardDescription>
-                              <div className="flex flex-col gap-2 mt-2">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4" />
-                                  {tournament.date}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <MapPin className="h-4 w-4" />
-                                  {tournament.location}
-                                </div>
-                              </div>
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <h4 className="font-semibold mb-3 flex items-center gap-2">
-                              <Trophy className="h-5 w-5 text-primary" />
-                              Победители:
-                            </h4>
-                            <div className="space-y-2">
-                              {tournament.winners.map((winner) => (
-                                <div key={winner.place} className="flex items-center gap-3 p-2 rounded bg-muted/50">
-                                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 flex-shrink-0">
-                                    <Medal
-                                      className={`h-5 w-5 ${
-                                        winner.place === 1
-                                          ? "text-yellow-600"
-                                          : winner.place === 2
-                                            ? "text-gray-400"
-                                            : "text-amber-700"
-                                      }`}
-                                    />
+                  {pastTournaments.map((tournament) => {
+                    const tournamentWinners = winners
+                      .filter((w) => w.tournament_id === tournament.id)
+                      .sort((a, b) => a.place - b.place)
+
+                    return (
+                      <Card key={tournament.id}>
+                        <div className="md:flex">
+                          <div className="md:w-2/5">
+                            <img
+                              src={
+                                tournament.image_url || "/placeholder.svg?height=256&width=400&query=past tournament"
+                              }
+                              alt={tournament.title}
+                              className="w-full h-64 md:h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-tr-none"
+                              loading="lazy"
+                            />
+                          </div>
+                          <div className="md:w-3/5">
+                            <CardHeader>
+                              <CardTitle className="text-2xl text-balance">{tournament.title}</CardTitle>
+                              <CardDescription>
+                                <div className="flex flex-col gap-2 mt-2">
+                                  <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    {new Date(tournament.date).toLocaleDateString("ru-RU")}
                                   </div>
-                                  <div className="flex-grow">
-                                    <div className="font-medium">{winner.name}</div>
-                                    <div className="text-sm text-muted-foreground">{winner.team}</div>
+                                  <div className="flex items-center gap-2">
+                                    <MapPin className="h-4 w-4" />
+                                    {tournament.location}
                                   </div>
-                                  <div className="text-lg font-bold text-muted-foreground">{winner.place} место</div>
                                 </div>
-                              ))}
-                            </div>
-                          </CardContent>
+                              </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                              {tournamentWinners.length > 0 && (
+                                <>
+                                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                                    <Trophy className="h-5 w-5 text-primary" />
+                                    Победители:
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {tournamentWinners.map((winner) => (
+                                      <div key={winner.id} className="flex items-center gap-3 p-2 rounded bg-muted/50">
+                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 flex-shrink-0">
+                                          <Medal
+                                            className={`h-5 w-5 ${
+                                              winner.place === 1
+                                                ? "text-yellow-600"
+                                                : winner.place === 2
+                                                  ? "text-gray-400"
+                                                  : "text-amber-700"
+                                            }`}
+                                          />
+                                        </div>
+                                        <div className="flex-grow">
+                                          <div className="font-medium">{winner.name}</div>
+                                          <div className="text-sm text-muted-foreground">{winner.team}</div>
+                                        </div>
+                                        <div className="text-lg font-bold text-muted-foreground">
+                                          {winner.place} место
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                            </CardContent>
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  ))}
+                      </Card>
+                    )
+                  })}
                 </div>
+
+                {pastTournaments.length === 0 && (
+                  <Card>
+                    <CardContent className="py-12 text-center text-muted-foreground">Архив турниров пуст</CardContent>
+                  </Card>
+                )}
               </TabsContent>
             </Tabs>
           </div>

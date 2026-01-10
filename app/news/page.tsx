@@ -4,71 +4,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { getVKPostsForPage } from "@/lib/vk-api"
+import { createClient } from "@/lib/supabase/server"
 
-// VK API integration - fetch posts from VK community
-async function getVKNews() {
+async function getVKSettings() {
   try {
-    // Note: In production, you would use VK API with access token
-    // For now, returning mock data that matches VK post structure
-    const mockNews = [
-      {
-        id: 1,
-        title: "Открытый турнир по воркауту",
-        text: "Приглашаем всех желающих на открытый турнир по воркауту! Соревнования пройдут на главной площадке. Регистрация открыта.",
-        date: new Date("2024-12-15").toLocaleDateString("ru-RU"),
-        image: "/street-workout-competition-athletes.jpg",
-        link: "https://vk.com/evolprov",
-      },
-      {
-        id: 2,
-        title: "Новое расписание тренировок",
-        text: "С января вводится новое расписание групповых тренировок. Добавлены вечерние занятия для работающих спортсменов.",
-        date: new Date("2024-12-10").toLocaleDateString("ru-RU"),
-        image: "/outdoor-training-schedule-workout.jpg",
-        link: "https://vk.com/evolprov",
-      },
-      {
-        id: 3,
-        title: "Итоги областного чемпионата",
-        text: "Наши спортсмены заняли призовые места на областном чемпионате! Поздравляем победителей и благодарим всех участников.",
-        date: new Date("2024-12-05").toLocaleDateString("ru-RU"),
-        image: "/workout-competition-winners-podium.jpg",
-        link: "https://vk.com/evolprov",
-      },
-      {
-        id: 4,
-        title: "Мастер-класс от чемпиона России",
-        text: "В субботу состоится мастер-класс от чемпиона России по воркауту. Не пропустите уникальную возможность поучиться у профессионала!",
-        date: new Date("2024-11-28").toLocaleDateString("ru-RU"),
-        image: "/professional-athlete-workout-masterclass.jpg",
-        link: "https://vk.com/evolprov",
-      },
-      {
-        id: 5,
-        title: "Зимние тренировки: особенности подготовки",
-        text: "Рассказываем о том, как правильно тренироваться зимой, какую экипировку выбрать и как избежать травм в холодное время года.",
-        date: new Date("2024-11-20").toLocaleDateString("ru-RU"),
-        image: "/winter-outdoor-training-cold-weather-workout.jpg",
-        link: "https://vk.com/evolprov",
-      },
-      {
-        id: 6,
-        title: "Открыта запись на индивидуальные тренировки",
-        text: "Начинается набор на индивидуальные тренировки с профессиональными тренерами. Ограниченное количество мест.",
-        date: new Date("2024-11-15").toLocaleDateString("ru-RU"),
-        image: "/personal-training-one-on-one-coaching-workout.jpg",
-        link: "https://vk.com/evolprov",
-      },
-    ]
-    return mockNews
-  } catch (error) {
-    console.error("Error fetching VK news:", error)
-    return []
+    const supabase = await createClient()
+    const { data } = await supabase.from("vk_settings").select("*").single()
+    return data || { group_id: "evolprov", posts_count: 10 }
+  } catch {
+    return { group_id: "evolprov", posts_count: 10 }
   }
 }
 
 export default async function NewsPage() {
-  const news = await getVKNews()
+  const settings = await getVKSettings()
+  const news = await getVKPostsForPage(settings.group_id, settings.posts_count)
 
   return (
     <>
@@ -88,7 +39,7 @@ export default async function NewsPage() {
                 <div className="md:flex">
                   <div className="md:w-2/5">
                     <img
-                      src={post.image || "/placeholder.svg"}
+                      src={post.image || "/placeholder.svg?height=256&width=400&query=workout news"}
                       alt={post.title}
                       className="w-full h-64 md:h-full object-cover"
                       loading="lazy"
@@ -101,7 +52,7 @@ export default async function NewsPage() {
                         {post.date}
                       </div>
                       <CardTitle className="text-2xl mb-2 text-balance">{post.title}</CardTitle>
-                      <CardDescription className="text-base text-pretty">{post.text}</CardDescription>
+                      <CardDescription className="text-base text-pretty line-clamp-4">{post.text}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <Button asChild variant="outline">
@@ -117,9 +68,15 @@ export default async function NewsPage() {
             ))}
           </div>
 
+          {news.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">Новости временно недоступны</p>
+            </div>
+          )}
+
           <div className="text-center mt-12">
             <Button asChild size="lg" variant="outline">
-              <Link href="https://vk.com/evolprov" target="_blank" rel="noopener noreferrer">
+              <Link href={`https://vk.com/${settings.group_id}`} target="_blank" rel="noopener noreferrer">
                 Все новости в VK
                 <ExternalLink className="ml-2 h-5 w-5" />
               </Link>

@@ -3,57 +3,41 @@ import { Footer } from "@/components/footer"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Clock, MapPin, User } from "lucide-react"
+import { createClient } from "@/lib/supabase/server"
 
-const scheduleData = [
-  {
-    day: "Понедельник",
-    sessions: [
-      { time: "10:00 - 12:00", trainer: "Алексей Иванов", type: "Групповая тренировка" },
-      { time: "18:00 - 20:00", trainer: "Дмитрий Петров", type: "Продвинутый уровень" },
-    ],
-  },
-  {
-    day: "Вторник",
-    sessions: [
-      { time: "10:00 - 12:00", trainer: "Сергей Смирнов", type: "Индивидуальные занятия" },
-      { time: "19:00 - 21:00", trainer: "Алексей Иванов", type: "Подготовка к турнирам" },
-    ],
-  },
-  {
-    day: "Среда",
-    sessions: [
-      { time: "10:00 - 12:00", trainer: "Дмитрий Петров", type: "Групповая тренировка" },
-      { time: "18:00 - 20:00", trainer: "Сергей Смирнов", type: "Начинающие" },
-    ],
-  },
-  {
-    day: "Четверг",
-    sessions: [
-      { time: "10:00 - 12:00", trainer: "Алексей Иванов", type: "Индивидуальные занятия" },
-      { time: "19:00 - 21:00", trainer: "Дмитрий Петров", type: "Продвинутый уровень" },
-    ],
-  },
-  {
-    day: "Пятница",
-    sessions: [
-      { time: "10:00 - 12:00", trainer: "Сергей Смирнов", type: "Групповая тренировка" },
-      { time: "18:00 - 20:00", trainer: "Алексей Иванов", type: "Все уровни" },
-    ],
-  },
-  {
-    day: "Суббота",
-    sessions: [
-      { time: "11:00 - 13:00", trainer: "Дмитрий Петров", type: "Мастер-класс" },
-      { time: "15:00 - 17:00", trainer: "Сергей Смирнов", type: "Открытая тренировка" },
-    ],
-  },
-  {
-    day: "Воскресенье",
-    sessions: [{ time: "11:00 - 13:00", trainer: "Алексей Иванов", type: "Групповая тренировка" }],
-  },
-]
+interface ScheduleItem {
+  id: string
+  day_of_week: string
+  time_slot: string
+  trainer: string
+  training_type: string
+}
 
-export default function SchedulePage() {
+const daysOrder = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+
+async function getSchedule() {
+  const supabase = await createClient()
+  const { data, error } = await supabase.from("schedule").select("*")
+
+  if (error) {
+    console.error("[v0] Error fetching schedule:", error)
+    return []
+  }
+
+  return data as ScheduleItem[]
+}
+
+export default async function SchedulePage() {
+  const schedule = await getSchedule()
+
+  // Group by day and sort
+  const scheduleByDay = daysOrder
+    .map((day) => ({
+      day,
+      sessions: schedule.filter((s) => s.day_of_week === day),
+    }))
+    .filter((d) => d.sessions.length > 0)
+
   return (
     <>
       <Header />
@@ -88,7 +72,7 @@ export default function SchedulePage() {
           </div>
 
           <div className="max-w-6xl mx-auto grid gap-6">
-            {scheduleData.map((daySchedule) => (
+            {scheduleByDay.map((daySchedule) => (
               <Card key={daySchedule.day}>
                 <CardHeader>
                   <CardTitle className="text-2xl">{daySchedule.day}</CardTitle>
@@ -104,15 +88,15 @@ export default function SchedulePage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {daySchedule.sessions.map((session, idx) => (
-                          <TableRow key={idx}>
+                        {daySchedule.sessions.map((session) => (
+                          <TableRow key={session.id}>
                             <TableCell className="font-medium">
                               <div className="flex items-center gap-2">
                                 <Clock className="h-4 w-4 text-muted-foreground" />
-                                {session.time}
+                                {session.time_slot}
                               </div>
                             </TableCell>
-                            <TableCell>{session.type}</TableCell>
+                            <TableCell>{session.training_type}</TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <User className="h-4 w-4 text-muted-foreground" />
@@ -127,6 +111,14 @@ export default function SchedulePage() {
                 </CardContent>
               </Card>
             ))}
+
+            {scheduleByDay.length === 0 && (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  Расписание временно недоступно
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           <div className="max-w-6xl mx-auto mt-12">
