@@ -1,0 +1,129 @@
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
+import { Check, Dumbbell, Users, Trophy, Target } from "lucide-react"
+
+const services = [
+  {
+    icon: Dumbbell,
+    title: "Индивидуальные тренировки",
+    description: "Персональный подход к каждому спортсмену с учетом уровня подготовки и целей",
+    price: "от 1000 ₽",
+    features: [
+      "Персональная программа тренировок",
+      "Анализ техники выполнения упражнений",
+      "Консультации по питанию",
+      "Гибкий график занятий",
+    ],
+    popular: false,
+  },
+  {
+    icon: Users,
+    title: "Групповые занятия",
+    description: "Тренировки в команде единомышленников под руководством опытных тренеров",
+    price: "от 500 ₽",
+    features: ["Групповая мотивация", "Разминка и заминка", "Базовая и продвинутая программы", "Дружеская атмосфера"],
+    popular: true,
+  },
+  {
+    icon: Trophy,
+    title: "Подготовка к турнирам",
+    description: "Профессиональная подготовка к соревнованиям любого уровня",
+    price: "от 1500 ₽",
+    features: [
+      "Тренировка соревновательных элементов",
+      "Работа над выносливостью",
+      "Психологическая подготовка",
+      "Анализ выступлений",
+    ],
+    popular: false,
+  },
+  {
+    icon: Target,
+    title: "Мастер-классы",
+    description: "Специализированные занятия по изучению сложных элементов и техник",
+    price: "от 700 ₽",
+    features: [
+      "Изучение продвинутых элементов",
+      "Занятия с приглашенными спортсменами",
+      "Видеоанализ техники",
+      "Практические советы от профи",
+    ],
+    popular: false,
+  },
+]
+
+export default function ServicesPage() {
+  return (
+    <>
+      <Header />
+      <main className="pt-24 pb-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto mb-12 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 text-balance">Наши услуги</h1>
+            <p className="text-lg text-muted-foreground text-pretty">
+              Выберите подходящий формат тренировок для достижения ваших спортивных целей
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {services.map((service, idx) => {
+              const Icon = service.icon
+              return (
+                <Card key={idx} className={`relative ${service.popular ? "border-primary border-2 shadow-lg" : ""}`}>
+                  {service.popular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <Badge className="bg-primary text-primary-foreground px-4 py-1">Популярное</Badge>
+                    </div>
+                  )}
+                  <CardHeader>
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
+                      <Icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-2xl">{service.title}</CardTitle>
+                    <CardDescription className="text-base mt-2 text-pretty">{service.description}</CardDescription>
+                    <div className="text-3xl font-bold text-primary mt-4">{service.price}</div>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {service.features.map((feature, featureIdx) => (
+                        <li key={featureIdx} className="flex items-start gap-2">
+                          <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                          <span className="text-sm">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <Button asChild className="w-full" variant={service.popular ? "default" : "outline"}>
+                      <Link href="/contact">Записаться</Link>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              )
+            })}
+          </div>
+
+          <div className="max-w-6xl mx-auto mt-16">
+            <Card className="bg-secondary text-secondary-foreground">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-2xl font-bold mb-4">Абонементы и скидки</h3>
+                <p className="text-lg mb-6 text-pretty">
+                  Приобретайте абонементы на месяц и экономьте до 30%. Для студентов и многодетных семей действуют
+                  специальные условия.
+                </p>
+                <Button asChild size="lg" className="bg-background text-foreground hover:bg-background/90">
+                  <Link href="/contact">Узнать подробнее</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </>
+  )
+}
