@@ -1,6 +1,7 @@
 import type React from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { RevealInit } from "@/components/reveal-init"
 import { HeroSection } from "@/components/home/hero"
 import { ScheduleTabs } from "@/components/home/schedule-tabs"
 import { FaqSection } from "@/components/home/faq"
@@ -72,6 +73,7 @@ export default async function HomePage() {
   return (
     <>
       <Header />
+      <RevealInit />
       <main>
         {/* 1. HERO */}
         <HeroSection />
