@@ -1,12 +1,9 @@
 import type React from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
-import { Check, Dumbbell, Users, Trophy, Target } from "lucide-react"
+import { Icon } from "@/lib/icons"
 import { createClient } from "@/lib/supabase/server"
+import Link from "next/link"
 
 interface Service {
   id: string
@@ -19,102 +16,179 @@ interface Service {
   sort_order: number
 }
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  dumbbell: Dumbbell,
-  users: Users,
-  trophy: Trophy,
-  target: Target,
+const ICON_MAP: Record<string, "dumbbell" | "kid" | "medal" | "flame" | "heart" | "layers"> = {
+  dumbbell: "dumbbell", users: "kid", trophy: "medal", target: "flame", heart: "heart", layers: "layers",
 }
 
-async function getServices() {
+async function getServices(): Promise<Service[]> {
   const supabase = await createClient()
   const { data, error } = await supabase.from("services").select("*").order("sort_order")
-
-  if (error) {
-    console.error("[v0] Error fetching services:", error)
-    return []
-  }
-
+  if (error) return []
   return data as Service[]
 }
 
 export default async function ServicesPage() {
   const services = await getServices()
+  const featured = services.find((s) => s.is_popular) ?? services[0]
+  const others = services.filter((s) => s.id !== featured?.id)
 
   return (
     <>
       <Header />
-      <main className="pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto mb-12 text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 text-balance">Наши услуги</h1>
-            <p className="text-lg text-muted-foreground text-pretty">
-              Выберите подходящий формат тренировок для достижения ваших спортивных целей
+      <main style={{ paddingTop: 80 }}>
+        {/* Hero */}
+        <div style={{ background: "var(--ink-2)", borderBottom: "1px solid var(--line)", padding: "64px var(--pad-x)" }}>
+          <div style={{ maxWidth: "var(--maxw)", margin: "0 auto" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <span style={{ width: 20, height: 1, background: "var(--acid)", display: "inline-block" }} />
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: "var(--acid)", textTransform: "uppercase" }}>
+                Программы
+              </span>
+            </div>
+            <h1 style={{
+              fontFamily: "var(--font-anton, Anton)",
+              fontSize: "clamp(40px, 6vw, 80px)",
+              lineHeight: 1, letterSpacing: "0.01em",
+              color: "var(--ds-white)", marginBottom: 16,
+            }}>
+              ПРОГРАММЫ ТРЕНИРОВОК
+            </h1>
+            <p style={{ fontSize: 14, color: "var(--ds-muted)", maxWidth: 480, lineHeight: 1.7 }}>
+              Подберите формат под ваш уровень и цели. Первое занятие всегда бесплатно.
             </p>
           </div>
+        </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {services.map((service) => {
-              const Icon = iconMap[service.icon] || Dumbbell
-              return (
-                <Card
-                  key={service.id}
-                  className={`relative ${service.is_popular ? "border-primary border-2 shadow-lg" : ""}`}
-                >
-                  {service.is_popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-primary text-primary-foreground px-4 py-1">Популярное</Badge>
+        {/* Programs bento */}
+        <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "64px var(--pad-x)" }}>
+          {services.length > 0 ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 2 }}>
+              {/* Featured */}
+              {featured && (
+                <div style={{ gridColumn: "span 2" }}>
+                  <div style={{
+                    background: "var(--ink-2)", padding: 40, height: "100%",
+                    borderLeft: "3px solid var(--acid)",
+                    display: "flex", flexDirection: "column", gap: 20,
+                  }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+                      <div style={{
+                        width: 44, height: 44, background: "rgba(74,222,128,0.12)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        color: "var(--acid)",
+                      }}>
+                        <Icon name={ICON_MAP[featured.icon] ?? "dumbbell"} size={22} sw={1.6} />
+                      </div>
+                      <span style={{
+                        fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
+                        color: "var(--on-acid)", background: "var(--acid)",
+                        padding: "4px 12px", textTransform: "uppercase",
+                      }}>
+                        Популярное
+                      </span>
                     </div>
-                  )}
-                  <CardHeader>
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-                      <Icon className="h-6 w-6 text-primary" />
+                    <div>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: "var(--ds-faint)", letterSpacing: "0.1em", marginBottom: 8 }}>01</div>
+                      <h2 style={{ fontSize: 28, fontWeight: 800, color: "var(--ds-white)", marginBottom: 10 }}>{featured.title}</h2>
+                      <p style={{ fontSize: 14, color: "var(--ds-muted)", lineHeight: 1.7 }}>{featured.description}</p>
                     </div>
-                    <CardTitle className="text-2xl">{service.title}</CardTitle>
-                    <CardDescription className="text-base mt-2 text-pretty">{service.description}</CardDescription>
-                    <div className="text-3xl font-bold text-primary mt-4">{service.price}</div>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3">
-                      {service.features.map((feature, featureIdx) => (
-                        <li key={featureIdx} className="flex items-start gap-2">
-                          <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                          <span className="text-sm">{feature}</span>
+                    <ul style={{ display: "flex", flexDirection: "column", gap: 8, listStyle: "none", padding: 0 }}>
+                      {featured.features?.map((f: string, i: number) => (
+                        <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 13, color: "var(--ds-muted)" }}>
+                          <Icon name="check" size={14} sw={2} style={{ color: "var(--acid)", flexShrink: 0, marginTop: 1 } as React.CSSProperties} />
+                          {f}
                         </li>
                       ))}
                     </ul>
-                  </CardContent>
-                  <CardFooter>
-                    <Button asChild className="w-full" variant={service.is_popular ? "default" : "outline"}>
-                      <Link href="/contact">Записаться</Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              )
-            })}
-          </div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", flexWrap: "wrap", gap: 16 }}>
+                      <div style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 32, color: "var(--acid)" }}>
+                        {featured.price}
+                      </div>
+                      <Link href="/#join" style={{
+                        display: "inline-flex", alignItems: "center", gap: 8,
+                        padding: "12px 24px", background: "var(--acid)", color: "var(--on-acid)",
+                        fontSize: 13, fontWeight: 700, letterSpacing: "0.05em",
+                        textDecoration: "none", textTransform: "uppercase",
+                      }}>
+                        Записаться <Icon name="arrow" size={14} sw={2} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-          {services.length === 0 && (
-            <Card className="max-w-2xl mx-auto">
-              <CardContent className="py-12 text-center text-muted-foreground">
-                Информация об услугах временно недоступна
-              </CardContent>
-            </Card>
+              {/* Others */}
+              {others.map((s, i) => (
+                <div key={s.id}>
+                  <div className="card-hover" style={{
+                    background: "var(--ink-2)", padding: 28, height: "100%",
+                    display: "flex", flexDirection: "column", gap: 14,
+                  }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: "var(--ds-faint)", letterSpacing: "0.1em" }}>
+                      0{i + 2}
+                    </div>
+                    <div style={{
+                      width: 38, height: 38, background: "var(--ink-4)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: "var(--ds-muted)",
+                    }}>
+                      <Icon name={ICON_MAP[s.icon] ?? "dumbbell"} size={18} sw={1.6} />
+                    </div>
+                    <div>
+                      <h3 style={{ fontSize: 20, fontWeight: 700, color: "var(--ds-white)", marginBottom: 6 }}>{s.title}</h3>
+                      <p style={{ fontSize: 13, color: "var(--ds-muted)", lineHeight: 1.6 }}>{s.description}</p>
+                    </div>
+                    <ul style={{ display: "flex", flexDirection: "column", gap: 6, listStyle: "none", padding: 0, flexGrow: 1 }}>
+                      {s.features?.map((f: string, fi: number) => (
+                        <li key={fi} style={{ display: "flex", alignItems: "flex-start", gap: 6, fontSize: 12, color: "var(--ds-faint)" }}>
+                          <Icon name="check" size={12} sw={2} style={{ color: "var(--acid)", flexShrink: 0, marginTop: 1 } as React.CSSProperties} />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto" }}>
+                      <div style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 24, color: "var(--acid)" }}>{s.price}</div>
+                      <Link href="/#join" style={{
+                        fontSize: 12, fontWeight: 600, color: "var(--acid)",
+                        textDecoration: "none", letterSpacing: "0.04em",
+                      }}>
+                        Записаться →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ padding: "64px 0", textAlign: "center", color: "var(--ds-muted)", fontSize: 14 }}>
+              Информация об услугах временно недоступна
+            </div>
           )}
 
-          <div className="max-w-6xl mx-auto mt-16">
-            <Card className="bg-secondary text-secondary-foreground">
-              <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-bold mb-4">Абонементы и скидки</h3>
-                <p className="text-lg mb-6 text-pretty">
-                  Приобретайте абонементы на месяц и экономьте до 30%. Для студентов и многодетных семей действуют
-                  специальные условия.
+          {/* Subscriptions block */}
+          <div style={{
+            marginTop: 2, background: "var(--ink-3)",
+            padding: "40px 40px",
+            borderLeft: "3px solid var(--line-2)",
+          }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr auto", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
+              <div>
+                <h3 style={{ fontSize: 22, fontWeight: 800, color: "var(--ds-white)", marginBottom: 8 }}>
+                  Абонементы и скидки
+                </h3>
+                <p style={{ fontSize: 14, color: "var(--ds-muted)", lineHeight: 1.7, maxWidth: 560 }}>
+                  Приобретайте абонементы на месяц и экономьте до 30%. Для студентов и многодетных семей действуют специальные условия.
                 </p>
-                <Button asChild size="lg" className="bg-background text-foreground hover:bg-background/90">
-                  <Link href="/contact">Узнать подробнее</Link>
-                </Button>
-              </CardContent>
-            </Card>
+              </div>
+              <Link href="/#join" className="btn-ghost-line" style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                padding: "12px 24px",
+                color: "var(--ds-white)", fontSize: 13, fontWeight: 700,
+                textDecoration: "none", letterSpacing: "0.04em", whiteSpace: "nowrap",
+              }}>
+                Узнать подробнее <Icon name="arrow" size={14} sw={2} />
+              </Link>
+            </div>
           </div>
         </div>
       </main>

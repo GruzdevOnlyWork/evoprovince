@@ -22,6 +22,7 @@ const navItems = [
   { href: "/admin/services", label: "Услуги" },
   { href: "/admin/tournaments", label: "Турниры" },
   { href: "/admin/vk-settings", label: "VK Новости" },
+  { href: "/judging", label: "Судейство →", accent: true },
 ]
 
 export function AdminTopNav({ user }: { user: SupabaseUser }) {
@@ -36,7 +37,7 @@ export function AdminTopNav({ user }: { user: SupabaseUser }) {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         {/* Left: Back to site + Logo */}
         <div className="flex items-center gap-6">
@@ -57,6 +58,18 @@ export function AdminTopNav({ user }: { user: SupabaseUser }) {
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href
+            if ((item as { accent?: boolean }).accent) {
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="px-3 py-2 text-sm font-medium transition-colors"
+                  style={{ color: "var(--acid)" }}
+                >
+                  {item.label}
+                </Link>
+              )
+            }
             return (
               <Link
                 key={item.href}
