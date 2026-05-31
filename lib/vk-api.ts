@@ -2,6 +2,7 @@
 
 export interface VKPost {
   id: number
+  owner_id: number
   text: string
   date: number
   attachments?: VKAttachment[]
@@ -124,7 +125,10 @@ export async function fetchVKPosts(groupId = "evoprovince", count = 10): Promise
         date: new Date(item.date * 1000).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }),
         image: imageUrl,
         isVideo,
-        link: `https://vk.com/evoprovince?w=wall-${groupId}_${item.id}`,
+        // owner_id is negative for groups (e.g. -12345), gives URL: /wall-12345_456
+        link: item.owner_id
+          ? `https://vk.com/wall${item.owner_id}_${item.id}`
+          : `https://vk.com/${groupId}`,
       }
     })
   } catch (error) {

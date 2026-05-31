@@ -1,6 +1,7 @@
 import type React from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { RevealInit } from "@/components/reveal-init"
 import { Icon } from "@/lib/icons"
 import { CountdownTimer } from "@/components/countdown-timer"
 import { createClient } from "@/lib/supabase/server"
@@ -54,6 +55,7 @@ export default async function TournamentsPage() {
   return (
     <>
       <Header />
+      <RevealInit />
       <main style={{ paddingTop: 80 }}>
         {/* Hero */}
         <div style={{ background: "var(--ink-2)", borderBottom: "1px solid var(--line)", padding: "64px var(--pad-x)" }}>
@@ -169,13 +171,13 @@ export default async function TournamentsPage() {
                 {past.map((t) => {
                   const tournamentWinners = winners.filter((w) => w.tournament_id === t.id).sort((a, b) => a.place - b.place)
                   return (
-                    <div key={t.id} className="reveal" style={{ background: "var(--ink-2)", display: "grid", gridTemplateColumns: "280px 1fr", overflow: "hidden" }}>
+                    <div key={t.id} className="reveal" style={{ background: "var(--ink-2)", overflow: "hidden" }}>
                       {t.image_url ? (
-                        <img src={t.image_url} alt={t.title} style={{ width: "100%", height: "100%", objectFit: "cover", minHeight: 200 }} loading="lazy" />
+                        <img src={t.image_url} alt={t.title} style={{ width: "100%", height: 220, objectFit: "cover" }} loading="lazy" />
                       ) : (
-                        <div className="ph" style={{ minHeight: 200 }} />
+                        <div className="ph" style={{ height: 220 }} />
                       )}
-                      <div style={{ padding: "28px 32px", display: "flex", flexDirection: "column", gap: 16 }}>
+                      <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: 16 }}>
                         <div>
                           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 12, flexWrap: "wrap" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>

@@ -1,6 +1,7 @@
 import type React from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { RevealInit } from "@/components/reveal-init"
 import { ScheduleTabs } from "@/components/home/schedule-tabs"
 import { createClient } from "@/lib/supabase/server"
 import { Icon } from "@/lib/icons"
@@ -26,6 +27,7 @@ export default async function SchedulePage() {
   return (
     <>
       <Header />
+      <RevealInit />
       <main style={{ paddingTop: 80 }}>
         {/* Hero */}
         <div style={{ background: "var(--ink-2)", borderBottom: "1px solid var(--line)", padding: "64px var(--pad-x)" }}>
