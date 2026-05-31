@@ -5,12 +5,7 @@ import { useReveal } from "@/hooks/use-reveal"
 import { useCountUp } from "@/hooks/use-count-up"
 import { Icon } from "@/lib/icons"
 
-const STATS = [
-  { label: "лет на улице", value: 12, suffix: "" },
-  { label: "воспитанников", value: 640, suffix: "+" },
-  { label: "медалей", value: 38, suffix: "" },
-  { label: "площадок", value: 5, suffix: "" },
-]
+
 
 function StatItem({ value, suffix, label }: { value: number; suffix: string; label: string }) {
   const { count, ref } = useCountUp(value)
@@ -107,9 +102,6 @@ export function HeroSection() {
           borderTop: "1px solid var(--line)",
           maxWidth: 560,
         }}>
-          {STATS.map((s) => (
-            <StatItem key={s.label} value={s.value} suffix={s.suffix} label={s.label} />
-          ))}
         </div>
       </div>
     </section>
