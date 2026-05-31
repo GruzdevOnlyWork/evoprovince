@@ -31,36 +31,49 @@ function TierBadge({ code, color }: { code: string; color?: string }) {
   )
 }
 
+// Static fallback data always available
+const STATIC_CRITERIA: Criterion[] = JUDGE_DATA.criteria.map((x, i) => ({ id: x.id, name: x.name, max_score: x.max, color: x.color, sort_order: i }))
+const STATIC_TIERS: Tier[] = JUDGE_DATA.tiers.map((x, i) => ({ id: x.id, code: x.id, label: x.label, pts: x.pts, sort_order: i }))
+const STATIC_ELEMENTS: JElement[] = [
+  ...JUDGE_DATA.statics.map((x, i) => ({ id: `s${i}`, name: x.name, tier_code: x.tier, element_type: "static", sort_order: i })),
+  ...JUDGE_DATA.dynamics.map((x, i) => ({ id: `d${i}`, name: x.name, tier_code: x.tier, element_type: "dynamic", sort_order: i })),
+]
+const STATIC_DEDUCTIONS: Deduction[] = JUDGE_DATA.deductions.map((x, i) => ({ id: x.id, name: x.name, pts: x.pts, sort_order: i }))
+const STATIC_RANKS: Rank[] = JUDGE_DATA.ranks.map((x, i) => ({ id: String(x.min), min_score: x.min, name: x.name, color: x.color, sort_order: i }))
+
 export default function JudgingPage() {
   useReveal()
 
-  const [criteria, setCriteria]     = useState<Criterion[]>([])
-  const [tiers, setTiers]           = useState<Tier[]>([])
-  const [elements, setElements]     = useState<JElement[]>([])
-  const [deductions, setDeductions] = useState<Deduction[]>([])
-  const [ranks, setRanks]           = useState<Rank[]>([])
-  const [loaded, setLoaded]         = useState(false)
+  // Start with static data immediately — no loading state
+  const [criteria, setCriteria]     = useState<Criterion[]>(STATIC_CRITERIA)
+  const [tiers, setTiers]           = useState<Tier[]>(STATIC_TIERS)
+  const [elements, setElements]     = useState<JElement[]>(STATIC_ELEMENTS)
+  const [deductions, setDeductions] = useState<Deduction[]>(STATIC_DEDUCTIONS)
+  const [ranks, setRanks]           = useState<Rank[]>(STATIC_RANKS)
 
+  // Try to load from DB asynchronously; on any error keep static data
   useEffect(() => {
-    const supabase = createClient()
-    Promise.all([
-      supabase.from("judging_criteria").select("*").order("sort_order"),
-      supabase.from("judging_tiers").select("*").order("sort_order"),
-      supabase.from("judging_elements").select("*").order("element_type").order("sort_order"),
-      supabase.from("judging_deductions").select("*").order("sort_order"),
-      supabase.from("judging_ranks").select("*").order("sort_order"),
-    ]).then(([c, t, e, d, r]) => {
-      // If tables don't exist yet, fall back to static JUDGE_DATA
-      setCriteria(c.data?.length ? c.data : JUDGE_DATA.criteria.map((x, i) => ({ id: x.id, name: x.name, max_score: x.max, color: x.color, sort_order: i })))
-      setTiers(t.data?.length ? t.data : JUDGE_DATA.tiers.map((x, i) => ({ id: x.id, code: x.id, label: x.label, pts: x.pts, sort_order: i })))
-      setElements(e.data?.length ? e.data : [
-        ...JUDGE_DATA.statics.map((x, i) => ({ id: `s${i}`, name: x.name, tier_code: x.tier, element_type: "static", sort_order: i })),
-        ...JUDGE_DATA.dynamics.map((x, i) => ({ id: `d${i}`, name: x.name, tier_code: x.tier, element_type: "dynamic", sort_order: i })),
-      ])
-      setDeductions(d.data?.length ? d.data : JUDGE_DATA.deductions.map((x, i) => ({ id: x.id, name: x.name, pts: x.pts, sort_order: i })))
-      setRanks(r.data?.length ? r.data : JUDGE_DATA.ranks.map((x, i) => ({ id: String(x.min), min_score: x.min, name: x.name, color: x.color, sort_order: i })))
-      setLoaded(true)
-    })
+    let cancelled = false
+    try {
+      const supabase = createClient()
+      Promise.all([
+        supabase.from("judging_criteria").select("*").order("sort_order"),
+        supabase.from("judging_tiers").select("*").order("sort_order"),
+        supabase.from("judging_elements").select("*").order("element_type").order("sort_order"),
+        supabase.from("judging_deductions").select("*").order("sort_order"),
+        supabase.from("judging_ranks").select("*").order("sort_order"),
+      ]).then(([c, t, e, d, r]) => {
+        if (cancelled) return
+        if (c.data?.length) setCriteria(c.data)
+        if (t.data?.length) setTiers(t.data)
+        if (e.data?.length) setElements(e.data)
+        if (d.data?.length) setDeductions(d.data)
+        if (r.data?.length) setRanks(r.data)
+      }).catch(() => { /* keep static data */ })
+    } catch {
+      // Supabase env vars not configured — static data stays
+    }
+    return () => { cancelled = true }
   }, [])
 
   const total = criteria.reduce((s, c) => s + c.max_score, 0)
@@ -91,16 +104,6 @@ export default function JudgingPage() {
 
   const statics  = elements.filter(e => e.element_type === "static")
   const dynamics = elements.filter(e => e.element_type === "dynamic")
-
-  if (!loaded) return (
-    <>
-      <Header />
-      <main style={{ paddingTop: 80, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <p style={{ color: "var(--ds-muted)" }}>Загрузка...</p>
-      </main>
-      <Footer />
-    </>
-  )
 
   return (
     <>
