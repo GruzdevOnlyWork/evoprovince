@@ -3,7 +3,6 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { RevealInit } from "@/components/reveal-init"
 import { Icon } from "@/lib/icons"
-import { CountdownTimer } from "@/components/countdown-timer"
 import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
 
@@ -134,9 +133,6 @@ export default async function TournamentsPage() {
                             <span style={{ fontSize: 13, color: "var(--ds-muted)" }}>{t.participants}</span>
                           </div>
                         )}
-                      </div>
-                      <div style={{ marginTop: "auto", paddingTop: 16, borderTop: "1px solid var(--line)" }}>
-                        <CountdownTimer date={t.date} />
                       </div>
                       <a href="https://vk.com/evoprovince" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 12px", border: "1px solid var(--line-2)", color: "var(--ds-muted)", fontSize: 12, textDecoration: "none", letterSpacing: "0.04em" }}>
                         <Icon name="vk" size={14} sw={1.6} /> Следить в ВКонтакте

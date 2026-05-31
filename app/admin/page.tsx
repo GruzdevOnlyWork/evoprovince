@@ -16,7 +16,7 @@ export default function AdminDashboard() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Панель управления</h1>
-        <p className="text-muted-foreground">Эволюция Провинции — административная часть</p>
+        <p className="text-muted-foreground">Эволюция Провинции административная часть</p>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

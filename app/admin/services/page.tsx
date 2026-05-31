@@ -238,15 +238,6 @@ export default function AdminServicesPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Цена</Label>
-                <Input
-                  placeholder="от 1000 ₽"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
                 <Label>Преимущества (каждое с новой строки)</Label>
                 <Textarea
                   placeholder="Персональная программа&#10;Анализ техники&#10;Консультации"
@@ -292,7 +283,6 @@ export default function AdminServicesPage() {
                           {service.title}
                           {service.is_popular && <Badge className="bg-primary">Популярное</Badge>}
                         </CardTitle>
-                        <p className="text-2xl font-bold text-primary mt-1">{service.price}</p>
                       </div>
                     </div>
                     <div className="flex gap-2">

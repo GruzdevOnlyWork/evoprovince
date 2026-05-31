@@ -145,9 +145,6 @@ export default async function HomePage() {
                         }}>{f}</span>
                       ))}
                     </div>
-                    <div style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 28, color: "var(--acid)", marginTop: "auto" }}>
-                      {featured.price}
-                    </div>
                   </div>
                 </div>
               )}
@@ -295,9 +292,6 @@ export default async function HomePage() {
             <div className="reveal">
               <SectionLabel>Вопросы</SectionLabel>
               <SectionTitle>ЧАСТО<br />СПРАШИВАЮТ</SectionTitle>
-              <p style={{ fontSize: 14, color: "var(--ds-muted)", lineHeight: 1.7 }}>
-                Если не нашли ответ — напишите нам, ответим в течение часа.
-              </p>
             </div>
             <div className="reveal" data-d="1">
               <FaqSection />
@@ -314,7 +308,7 @@ export default async function HomePage() {
                 НАЙДИ НАС
               </h2>
               <p style={{ fontSize: 14, color: "var(--ds-muted)", lineHeight: 1.7, maxWidth: 400 }}>
-                Саратовская обл., Новоузенск. Приходи на открытую тренировку — расписание на сайте.
+                Саратовская обл., Новоузенск. Приходи на открытую тренировку расписание на сайте.
               </p>
             </div>
             <div className="reveal" data-d="1" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>

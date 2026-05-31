@@ -160,7 +160,7 @@ export default async function ServicesPage() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
               <div>
                 <h3 style={{ fontSize: 22, fontWeight: 800, color: "var(--ds-white)", marginBottom: 8 }}>
-                  Все тренировки — бесплатно
+                  Все тренировки бесплатно
                 </h3>
                 <p style={{ fontSize: 14, color: "var(--ds-muted)", lineHeight: 1.7, maxWidth: 560 }}>
                   Секция «Эволюция Провинции» работает на некоммерческой основе. Приходи на первую тренировку и начинай заниматься уже сегодня.

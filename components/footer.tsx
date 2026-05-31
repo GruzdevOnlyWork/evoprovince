@@ -24,7 +24,6 @@ export function Footer() {
 
   const SOCIALS = [
     { href: "https://vk.com/evoprovince", label: "VK", icon: "vk" as const },
-    { href: "https://instagram.com/evoprovince", label: "Instagram", icon: "insta" as const },
   ]
 
   return (
@@ -125,10 +124,6 @@ export function Footer() {
           </div>
         </div>
 
-        <div style={{ borderTop: "1px solid var(--line)", paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-          <p style={{ fontSize: 12, color: "var(--ds-faint)" }}>© {year} Эволюция провинции. Все права защищены.</p>
-          <Link href="/admin" style={{ fontSize: 12, color: "var(--ds-faint)", textDecoration: "none" }}>Администрация</Link>
-        </div>
       </div>
 
       {/* Scroll-to-top */}

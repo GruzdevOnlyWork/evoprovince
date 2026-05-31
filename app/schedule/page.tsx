@@ -47,7 +47,7 @@ export default async function SchedulePage() {
               КОГДА ТРЕНИРУЕМСЯ
             </h1>
             <p style={{ fontSize: 14, color: "var(--ds-muted)", maxWidth: 480, lineHeight: 1.7 }}>
-              Выбирайте удобное время. Первое занятие — бесплатно.
+              Выбирайте удобное время. Первое занятие бесплатно.
             </p>
           </div>
         </div>
@@ -58,12 +58,12 @@ export default async function SchedulePage() {
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Icon name="pin" size={14} style={{ color: "var(--acid)" } as React.CSSProperties} />
               <span style={{ fontSize: 13, color: "var(--ds-muted)" }}>
-                Площадка «Эволюция» — ул. Спортивная, 15
+                Площадка «Эволюция» ул. Спортивная, 15
               </span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Icon name="clock" size={14} style={{ color: "var(--acid)" } as React.CSSProperties} />
-              <span style={{ fontSize: 13, color: "var(--ds-muted)" }}>Длительность тренировки — 2 часа</span>
+              <span style={{ fontSize: 13, color: "var(--ds-muted)" }}>Длительность тренировки 2 часа</span>
             </div>
           </div>
         </div>
@@ -78,7 +78,7 @@ export default async function SchedulePage() {
           <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", display: "flex", alignItems: "flex-start", gap: 12 }}>
             <Icon name="news" size={16} style={{ color: "var(--acid)", flexShrink: 0, marginTop: 2 } as React.CSSProperties} />
             <p style={{ fontSize: 13, color: "var(--ds-muted)", lineHeight: 1.7 }}>
-              Расписание может меняться в зависимости от погоды. При морозе до −15 °C занятия проводятся, при сильном снегопаде — переносятся. Следите за актуальными новостями в нашей группе VK.
+              Расписание может меняться в зависимости от погоды. При морозе до −15 °C занятия проводятся, при сильном снегопаде переносятся. Следите за актуальными новостями в нашей группе VK.
             </p>
           </div>
         </div>

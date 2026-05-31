@@ -20,28 +20,53 @@ interface Deduction { id: string; name: string; pts: number; sort_order: number 
 interface Rank { id: string; min_score: number; name: string; color: string; sort_order: number }
 
 export default function AdminJudgingPage() {
-  const supabase = createClient()
   const [criteria, setCriteria]     = useState<Criterion[]>([])
   const [tiers, setTiers]           = useState<Tier[]>([])
   const [elements, setElements]     = useState<Element[]>([])
   const [deductions, setDeductions] = useState<Deduction[]>([])
   const [ranks, setRanks]           = useState<Rank[]>([])
   const [loading, setLoading]       = useState(true)
+  const [dbError, setDbError]       = useState<string | null>(null)
+
+  const getClient = () => {
+    try { return createClient() } catch { return null }
+  }
 
   const fetchAll = async () => {
     setLoading(true)
-    const [c, t, e, d, r] = await Promise.all([
-      supabase.from("judging_criteria").select("*").order("sort_order"),
-      supabase.from("judging_tiers").select("*").order("sort_order"),
-      supabase.from("judging_elements").select("*").order("element_type").order("sort_order"),
-      supabase.from("judging_deductions").select("*").order("sort_order"),
-      supabase.from("judging_ranks").select("*").order("sort_order"),
-    ])
-    setCriteria(c.data || [])
-    setTiers(t.data || [])
-    setElements(e.data || [])
-    setDeductions(d.data || [])
-    setRanks(r.data || [])
+    setDbError(null)
+    const supabase = getClient()
+    if (!supabase) {
+      setDbError("Supabase не настроен. Проверьте переменные окружения.")
+      setLoading(false)
+      return
+    }
+    try {
+      const [c, t, e, d, r] = await Promise.all([
+        supabase.from("judging_criteria").select("*").order("sort_order"),
+        supabase.from("judging_tiers").select("*").order("sort_order"),
+        supabase.from("judging_elements").select("*").order("element_type").order("sort_order"),
+        supabase.from("judging_deductions").select("*").order("sort_order"),
+        supabase.from("judging_ranks").select("*").order("sort_order"),
+      ])
+      if (c.error || t.error || e.error || d.error || r.error) {
+        const err = c.error || t.error || e.error || d.error || r.error
+        if (err?.code === "42P01" || err?.message?.includes("does not exist")) {
+          setDbError("Таблицы судейства не найдены. Выполните скрипт scripts/004_judging_tables.sql в Supabase Dashboard.")
+        } else {
+          setDbError(err?.message ?? "Ошибка загрузки данных")
+        }
+        setLoading(false)
+        return
+      }
+      setCriteria(c.data || [])
+      setTiers(t.data || [])
+      setElements(e.data || [])
+      setDeductions(d.data || [])
+      setRanks(r.data || [])
+    } catch (err) {
+      setDbError(err instanceof Error ? err.message : "Неизвестная ошибка")
+    }
     setLoading(false)
   }
 
@@ -50,7 +75,9 @@ export default function AdminJudgingPage() {
   // Generic delete helper
   const del = async (table: string, id: string) => {
     if (!confirm("Удалить запись?")) return
-    await supabase.from(table).delete().eq("id", id)
+    const supabase = getClient()
+    if (!supabase) return
+    await getClient()?.from(table).delete().eq("id", id)
     fetchAll()
   }
 
@@ -61,9 +88,21 @@ export default function AdminJudgingPage() {
         <p className="text-muted-foreground">Редактирование критериев, тиров, элементов, сбавок и рангов</p>
       </div>
 
+      {dbError && (
+        <div className="mb-6 p-4 border border-destructive/50 bg-destructive/10 rounded-lg">
+          <p className="text-sm font-medium text-destructive mb-1">Ошибка загрузки</p>
+          <p className="text-sm text-muted-foreground">{dbError}</p>
+          {dbError.includes("скрипт") && (
+            <p className="text-xs text-muted-foreground mt-2">
+              Путь к файлу: <code className="bg-muted px-1 rounded">scripts/004_judging_tables.sql</code>
+            </p>
+          )}
+        </div>
+      )}
+
       {loading ? (
         <div className="text-center py-12 text-muted-foreground">Загрузка...</div>
-      ) : (
+      ) : dbError ? null : (
         <Tabs defaultValue="criteria">
           <TabsList className="mb-6 flex-wrap h-auto">
             <TabsTrigger value="criteria">Критерии</TabsTrigger>
@@ -75,27 +114,27 @@ export default function AdminJudgingPage() {
 
           {/* CRITERIA */}
           <TabsContent value="criteria">
-            <CriteriaTab criteria={criteria} onSave={fetchAll} onDelete={(id) => del("judging_criteria", id)} supabase={supabase} />
+            <CriteriaTab criteria={criteria} onSave={fetchAll} onDelete={(id) => del("judging_criteria", id)} getClient={getClient} />
           </TabsContent>
 
           {/* TIERS */}
           <TabsContent value="tiers">
-            <TiersTab tiers={tiers} onSave={fetchAll} onDelete={(id) => del("judging_tiers", id)} supabase={supabase} />
+            <TiersTab tiers={tiers} onSave={fetchAll} onDelete={(id) => del("judging_tiers", id)} getClient={getClient} />
           </TabsContent>
 
           {/* ELEMENTS */}
           <TabsContent value="elements">
-            <ElementsTab elements={elements} tiers={tiers} onSave={fetchAll} onDelete={(id) => del("judging_elements", id)} supabase={supabase} />
+            <ElementsTab elements={elements} tiers={tiers} onSave={fetchAll} onDelete={(id) => del("judging_elements", id)} getClient={getClient} />
           </TabsContent>
 
           {/* DEDUCTIONS */}
           <TabsContent value="deductions">
-            <DeductionsTab deductions={deductions} onSave={fetchAll} onDelete={(id) => del("judging_deductions", id)} supabase={supabase} />
+            <DeductionsTab deductions={deductions} onSave={fetchAll} onDelete={(id) => del("judging_deductions", id)} getClient={getClient} />
           </TabsContent>
 
           {/* RANKS */}
           <TabsContent value="ranks">
-            <RanksTab ranks={ranks} onSave={fetchAll} onDelete={(id) => del("judging_ranks", id)} supabase={supabase} />
+            <RanksTab ranks={ranks} onSave={fetchAll} onDelete={(id) => del("judging_ranks", id)} getClient={getClient} />
           </TabsContent>
         </Tabs>
       )}
@@ -104,8 +143,8 @@ export default function AdminJudgingPage() {
 }
 
 // ── Criteria Tab ──
-function CriteriaTab({ criteria, onSave, onDelete, supabase }: {
-  criteria: Criterion[]; onSave: () => void; onDelete: (id: string) => void; supabase: ReturnType<typeof createClient>
+function CriteriaTab({ criteria, onSave, onDelete, getClient }: {
+  criteria: Criterion[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<Criterion | null>(null)
@@ -117,8 +156,8 @@ function CriteriaTab({ criteria, onSave, onDelete, supabase }: {
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
     const data = { name: form.name, max_score: parseFloat(form.max_score), color: form.color, sort_order: parseInt(form.sort_order) }
-    if (editing) await supabase.from("judging_criteria").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await supabase.from("judging_criteria").insert([data])
+    if (editing) await getClient()?.from("judging_criteria").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+    else await getClient()?.from("judging_criteria").insert([data])
     setOpen(false); onSave()
   }
 
@@ -164,8 +203,8 @@ function CriteriaTab({ criteria, onSave, onDelete, supabase }: {
 }
 
 // ── Tiers Tab ──
-function TiersTab({ tiers, onSave, onDelete, supabase }: {
-  tiers: Tier[]; onSave: () => void; onDelete: (id: string) => void; supabase: ReturnType<typeof createClient>
+function TiersTab({ tiers, onSave, onDelete, getClient }: {
+  tiers: Tier[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<Tier | null>(null)
@@ -177,8 +216,8 @@ function TiersTab({ tiers, onSave, onDelete, supabase }: {
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
     const data = { code: form.code, label: form.label, pts: parseFloat(form.pts), sort_order: parseInt(form.sort_order) }
-    if (editing) await supabase.from("judging_tiers").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await supabase.from("judging_tiers").insert([data])
+    if (editing) await getClient()?.from("judging_tiers").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+    else await getClient()?.from("judging_tiers").insert([data])
     setOpen(false); onSave()
   }
 
@@ -221,8 +260,8 @@ function TiersTab({ tiers, onSave, onDelete, supabase }: {
 }
 
 // ── Elements Tab ──
-function ElementsTab({ elements, tiers, onSave, onDelete, supabase }: {
-  elements: Element[]; tiers: Tier[]; onSave: () => void; onDelete: (id: string) => void; supabase: ReturnType<typeof createClient>
+function ElementsTab({ elements, tiers, onSave, onDelete, getClient }: {
+  elements: Element[]; tiers: Tier[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<Element | null>(null)
@@ -234,8 +273,8 @@ function ElementsTab({ elements, tiers, onSave, onDelete, supabase }: {
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
     const data = { name: form.name, tier_code: form.tier_code, element_type: form.element_type, sort_order: parseInt(form.sort_order) }
-    if (editing) await supabase.from("judging_elements").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await supabase.from("judging_elements").insert([data])
+    if (editing) await getClient()?.from("judging_elements").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+    else await getClient()?.from("judging_elements").insert([data])
     setOpen(false); onSave()
   }
 
@@ -307,8 +346,8 @@ function ElementsTab({ elements, tiers, onSave, onDelete, supabase }: {
 }
 
 // ── Deductions Tab ──
-function DeductionsTab({ deductions, onSave, onDelete, supabase }: {
-  deductions: Deduction[]; onSave: () => void; onDelete: (id: string) => void; supabase: ReturnType<typeof createClient>
+function DeductionsTab({ deductions, onSave, onDelete, getClient }: {
+  deductions: Deduction[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<Deduction | null>(null)
@@ -320,8 +359,8 @@ function DeductionsTab({ deductions, onSave, onDelete, supabase }: {
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
     const data = { name: form.name, pts: parseFloat(form.pts), sort_order: parseInt(form.sort_order) }
-    if (editing) await supabase.from("judging_deductions").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await supabase.from("judging_deductions").insert([data])
+    if (editing) await getClient()?.from("judging_deductions").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+    else await getClient()?.from("judging_deductions").insert([data])
     setOpen(false); onSave()
   }
 
@@ -361,8 +400,8 @@ function DeductionsTab({ deductions, onSave, onDelete, supabase }: {
 }
 
 // ── Ranks Tab ──
-function RanksTab({ ranks, onSave, onDelete, supabase }: {
-  ranks: Rank[]; onSave: () => void; onDelete: (id: string) => void; supabase: ReturnType<typeof createClient>
+function RanksTab({ ranks, onSave, onDelete, getClient }: {
+  ranks: Rank[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<Rank | null>(null)
@@ -374,8 +413,8 @@ function RanksTab({ ranks, onSave, onDelete, supabase }: {
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
     const data = { name: form.name, min_score: parseInt(form.min_score), color: form.color, sort_order: parseInt(form.sort_order) }
-    if (editing) await supabase.from("judging_ranks").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await supabase.from("judging_ranks").insert([data])
+    if (editing) await getClient()?.from("judging_ranks").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+    else await getClient()?.from("judging_ranks").insert([data])
     setOpen(false); onSave()
   }
 
