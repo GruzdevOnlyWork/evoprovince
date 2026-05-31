@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -31,14 +32,11 @@ export default function AdminVKSettingsPage() {
   const fetchSettings = async () => {
     const { data, error } = await supabase.from("vk_settings").select("*").single()
     if (error && error.code !== "PGRST116") {
-      console.error("[v0] Error fetching VK settings:", error)
+      toast.error("Ошибка загрузки настроек: " + error.message)
     }
     if (data) {
       setSettings(data)
-      setFormData({
-        group_id: data.group_id,
-        posts_count: data.posts_count,
-      })
+      setFormData({ group_id: data.group_id, posts_count: data.posts_count })
     }
     setIsLoading(false)
   }
@@ -51,27 +49,13 @@ export default function AdminVKSettingsPage() {
     e.preventDefault()
     setIsSaving(true)
 
-    if (settings) {
-      const { error } = await supabase
-        .from("vk_settings")
-        .update({
-          ...formData,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", settings.id)
-
-      if (error) {
-        console.error("[v0] Error updating VK settings:", error)
-      }
-    } else {
-      const { error } = await supabase.from("vk_settings").insert([formData])
-
-      if (error) {
-        console.error("[v0] Error creating VK settings:", error)
-      }
-    }
+    const { error } = settings
+      ? await supabase.from("vk_settings").update({ ...formData, updated_at: new Date().toISOString() }).eq("id", settings.id)
+      : await supabase.from("vk_settings").insert([formData])
 
     setIsSaving(false)
+    if (error) { toast.error("Ошибка сохранения: " + error.message); return }
+    toast.success("Настройки сохранены")
     fetchSettings()
   }
 

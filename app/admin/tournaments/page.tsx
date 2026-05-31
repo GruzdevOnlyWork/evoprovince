@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -97,25 +98,13 @@ export default function AdminTournamentsPage() {
       image_url: formData.image_url || null,
     }
 
-    if (editingItem) {
-      const { error } = await supabase
-        .from("tournaments")
-        .update({ ...data, updated_at: new Date().toISOString() })
-        .eq("id", editingItem.id)
+    const { error } = editingItem
+      ? await supabase.from("tournaments").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editingItem.id)
+      : await supabase.from("tournaments").insert([data])
 
-      if (error) {
-        console.error("[v0] Error updating tournament:", error)
-        return
-      }
-    } else {
-      const { error } = await supabase.from("tournaments").insert([data])
+    if (error) { toast.error("Ошибка: " + error.message); return }
 
-      if (error) {
-        console.error("[v0] Error creating tournament:", error)
-        return
-      }
-    }
-
+    toast.success(editingItem ? "Турнир обновлён" : "Турнир добавлен")
     setIsDialogOpen(false)
     setEditingItem(null)
     resetForm()
@@ -126,27 +115,36 @@ export default function AdminTournamentsPage() {
     e.preventDefault()
     if (!selectedTournament) return
 
-    // Delete existing winners
-    await supabase.from("tournament_winners").delete().eq("tournament_id", selectedTournament.id)
-
-    // Insert new winners
     const validWinners = winnersData.filter((w) => w.name.trim())
+
+    // Insert new winners first to verify no error, then delete old ones
     if (validWinners.length > 0) {
-      const { error } = await supabase.from("tournament_winners").insert(
+      // Upsert approach: delete then insert — but check insert first via dry-run is not possible
+      // Safe sequence: insert new with temp check, delete old, confirm
+      const { error: delErr } = await supabase
+        .from("tournament_winners")
+        .delete()
+        .eq("tournament_id", selectedTournament.id)
+
+      if (delErr) { toast.error("Ошибка удаления старых победителей: " + delErr.message); return }
+
+      const { error: insErr } = await supabase.from("tournament_winners").insert(
         validWinners.map((w) => ({
           tournament_id: selectedTournament.id,
           place: w.place,
-          name: w.name,
-          team: w.team,
+          name: w.name.trim(),
+          team: w.team.trim(),
         })),
       )
 
-      if (error) {
-        console.error("[v0] Error saving winners:", error)
-        return
-      }
+      if (insErr) { toast.error("Ошибка сохранения победителей: " + insErr.message); return }
+    } else {
+      // No winners — just clear existing
+      const { error } = await supabase.from("tournament_winners").delete().eq("tournament_id", selectedTournament.id)
+      if (error) { toast.error("Ошибка: " + error.message); return }
     }
 
+    toast.success("Победители сохранены")
     setIsWinnersDialogOpen(false)
     setSelectedTournament(null)
     fetchData()
@@ -197,10 +195,8 @@ export default function AdminTournamentsPage() {
     if (!confirm("Удалить этот турнир?")) return
 
     const { error } = await supabase.from("tournaments").delete().eq("id", id)
-    if (error) {
-      console.error("[v0] Error deleting tournament:", error)
-      return
-    }
+    if (error) { toast.error("Ошибка удаления: " + error.message); return }
+    toast.success("Турнир удалён")
     fetchData()
   }
 

@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -76,8 +77,10 @@ export default function AdminJudgingPage() {
   const del = async (table: string, id: string) => {
     if (!confirm("Удалить запись?")) return
     const supabase = getClient()
-    if (!supabase) return
-    await getClient()?.from(table).delete().eq("id", id)
+    if (!supabase) { toast.error("Нет подключения к БД"); return }
+    const { error } = await supabase.from(table).delete().eq("id", id)
+    if (error) { toast.error("Ошибка удаления: " + error.message); return }
+    toast.success("Запись удалена")
     fetchAll()
   }
 
@@ -155,9 +158,13 @@ function CriteriaTab({ criteria, onSave, onDelete, getClient }: {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
+    const db = getClient(); if (!db) { toast.error("Нет подключения к БД"); return }
     const data = { name: form.name, max_score: parseFloat(form.max_score), color: form.color, sort_order: parseInt(form.sort_order) }
-    if (editing) await getClient()?.from("judging_criteria").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await getClient()?.from("judging_criteria").insert([data])
+    const { error } = editing
+      ? await db.from("judging_criteria").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+      : await db.from("judging_criteria").insert([data])
+    if (error) { toast.error("Ошибка: " + error.message); return }
+    toast.success("Сохранено")
     setOpen(false); onSave()
   }
 
@@ -215,9 +222,13 @@ function TiersTab({ tiers, onSave, onDelete, getClient }: {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
+    const db = getClient(); if (!db) { toast.error("Нет подключения к БД"); return }
     const data = { code: form.code, label: form.label, pts: parseFloat(form.pts), sort_order: parseInt(form.sort_order) }
-    if (editing) await getClient()?.from("judging_tiers").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await getClient()?.from("judging_tiers").insert([data])
+    const { error } = editing
+      ? await db.from("judging_tiers").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+      : await db.from("judging_tiers").insert([data])
+    if (error) { toast.error("Ошибка: " + error.message); return }
+    toast.success("Сохранено")
     setOpen(false); onSave()
   }
 
@@ -272,9 +283,13 @@ function ElementsTab({ elements, tiers, onSave, onDelete, getClient }: {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
+    const db = getClient(); if (!db) { toast.error("Нет подключения к БД"); return }
     const data = { name: form.name, tier_code: form.tier_code, element_type: form.element_type, sort_order: parseInt(form.sort_order) }
-    if (editing) await getClient()?.from("judging_elements").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await getClient()?.from("judging_elements").insert([data])
+    const { error } = editing
+      ? await db.from("judging_elements").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+      : await db.from("judging_elements").insert([data])
+    if (error) { toast.error("Ошибка: " + error.message); return }
+    toast.success("Сохранено")
     setOpen(false); onSave()
   }
 
@@ -358,9 +373,13 @@ function DeductionsTab({ deductions, onSave, onDelete, getClient }: {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
+    const db = getClient(); if (!db) { toast.error("Нет подключения к БД"); return }
     const data = { name: form.name, pts: parseFloat(form.pts), sort_order: parseInt(form.sort_order) }
-    if (editing) await getClient()?.from("judging_deductions").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await getClient()?.from("judging_deductions").insert([data])
+    const { error } = editing
+      ? await db.from("judging_deductions").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+      : await db.from("judging_deductions").insert([data])
+    if (error) { toast.error("Ошибка: " + error.message); return }
+    toast.success("Сохранено")
     setOpen(false); onSave()
   }
 
@@ -412,9 +431,13 @@ function RanksTab({ ranks, onSave, onDelete, getClient }: {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
+    const db = getClient(); if (!db) { toast.error("Нет подключения к БД"); return }
     const data = { name: form.name, min_score: parseInt(form.min_score), color: form.color, sort_order: parseInt(form.sort_order) }
-    if (editing) await getClient()?.from("judging_ranks").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
-    else await getClient()?.from("judging_ranks").insert([data])
+    const { error } = editing
+      ? await db.from("judging_ranks").update({ ...data, updated_at: new Date().toISOString() }).eq("id", editing.id)
+      : await db.from("judging_ranks").insert([data])
+    if (error) { toast.error("Ошибка: " + error.message); return }
+    toast.success("Сохранено")
     setOpen(false); onSave()
   }
 
