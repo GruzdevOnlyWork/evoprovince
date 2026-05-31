@@ -171,7 +171,6 @@ export default async function HomePage() {
                     </div>
                     <h3 style={{ fontSize: 18, fontWeight: 700, color: "var(--ds-white)" }}>{s.title}</h3>
                     <p style={{ fontSize: 13, color: "var(--ds-muted)", lineHeight: 1.6, flexGrow: 1 }}>{s.description}</p>
-                    <div style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 22, color: "var(--acid)" }}>{s.price}</div>
                   </div>
                 </div>
               ))}
@@ -203,7 +202,42 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* 5. NEWS */}
+        {/* 5. VIDEO GALLERY */}
+        <section style={{ padding: "100px var(--pad-x)", maxWidth: "var(--maxw)", margin: "0 auto" }} id="videos">
+          <div className="reveal" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 48, flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <SectionLabel>Видео</SectionLabel>
+              <h2 style={{ fontFamily: "var(--font-anton, Anton)", fontSize: "clamp(36px, 5vw, 64px)", lineHeight: 1, letterSpacing: "0.01em" }}>
+                СМОТРИ НАС В ДЕЛЕ
+              </h2>
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 2 }}>
+            {[
+              "https://yandex.ru/video/touch/preview/13459166230666584690",
+              "https://yandex.ru/video/touch/preview/8002640497761513438",
+              "https://yandex.ru/video/touch/preview/2627569204809627738",
+              "https://yandex.ru/video/touch/preview/7745751746423077013",
+              "https://yandex.ru/video/touch/preview/1933980522527066938",
+            ].map((url, i) => (
+              <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="reveal card-hover" data-d={String(((i % 3) + 1) as 1 | 2 | 3)} style={{ textDecoration: "none", display: "block", background: "var(--ink-2)" }}>
+                <div className="ph" style={{ height: 180, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+                  <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(74,222,128,0.15)", border: "2px solid var(--acid)", display: "flex", alignItems: "center", justifyContent: "center", transition: "transform .2s" }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--acid)"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                </div>
+                <div style={{ padding: "14px 16px" }}>
+                  <span style={{ fontSize: 12, color: "var(--ds-muted)" }}>Видео #{i + 1}</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 4, fontSize: 11, color: "var(--acid)" }}>
+                    Смотреть <Icon name="arrowUR" size={10} sw={2} />
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* 6. NEWS */}
         {posts.length > 0 && (
           <section style={{ padding: "100px var(--pad-x)", maxWidth: "var(--maxw)", margin: "0 auto" }} id="news">
             <div className="reveal" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 48, flexWrap: "wrap", gap: 16 }}>

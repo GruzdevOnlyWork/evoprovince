@@ -68,9 +68,24 @@ export default async function NewsPage() {
                   }}
                 >
                   {post.image ? (
-                    <img src={post.image} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover", minHeight: 220 }} loading="lazy" />
+                    <div style={{ position: "relative" }}>
+                      <img src={post.image} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover", minHeight: 220, display: "block" }} loading="lazy" />
+                      {post.isVideo && (
+                        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.3)" }}>
+                          <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(255,255,255,0.9)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--ink)"><path d="M8 5v14l11-7z"/></svg>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   ) : (
-                    <div className="ph" style={{ minHeight: 220 }} />
+                    <div className="ph" style={{ minHeight: 220, position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      {post.isVideo && (
+                        <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(74,222,128,0.15)", border: "1px solid var(--acid)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--acid)"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                      )}
+                    </div>
                   )}
                   <div style={{ padding: "28px 32px", display: "flex", flexDirection: "column", gap: 12 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>

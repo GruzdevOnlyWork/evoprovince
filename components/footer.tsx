@@ -23,9 +23,8 @@ export function Footer() {
   }, [])
 
   const SOCIALS = [
-    { href: "https://vk.com/evolprov", label: "VK", icon: "vk" as const },
-    { href: "https://instagram.com/evolprov", label: "Instagram", icon: "insta" as const },
-    { href: "https://t.me/evolprov", label: "Telegram", icon: "send" as const },
+    { href: "https://vk.com/evoprovince", label: "VK", icon: "vk" as const },
+    { href: "https://instagram.com/evoprovince", label: "Instagram", icon: "insta" as const },
   ]
 
   return (
@@ -45,7 +44,7 @@ export function Footer() {
               </span>
             </Link>
             <p style={{ fontSize: 13, color: "var(--ds-muted)", lineHeight: 1.7, maxWidth: 240 }}>
-              Спортивная секция воркаута. Тренировки и соревнования на турниках для спортсменов всех уровней.
+              Бесплатная секция уличного воркаута. Тренировки и соревнования для всех возрастов.
             </p>
           </div>
 
@@ -74,17 +73,17 @@ export function Footer() {
               Контакты
             </p>
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-              <li style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Icon name="pin" size={14} className="shrink-0" style={{ color: "var(--acid)" } as React.CSSProperties} />
-                <span style={{ fontSize: 13, color: "var(--ds-muted)" }}>г. Саратов, ул. Спортивная, 15</span>
+              <li style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                <Icon name="pin" size={14} className="shrink-0" style={{ color: "var(--acid)", marginTop: 1 } as React.CSSProperties} />
+                <span style={{ fontSize: 13, color: "var(--ds-muted)" }}>Саратовская обл., Новоузенск</span>
               </li>
               <li style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Icon name="send" size={14} className="shrink-0" style={{ color: "var(--acid)" } as React.CSSProperties} />
-                <a href="mailto:info@evolprov.ru" style={{ fontSize: 13, color: "var(--ds-muted)", textDecoration: "none", transition: "color .2s" }}
+                <Icon name="vk" size={14} className="shrink-0" style={{ color: "var(--acid)" } as React.CSSProperties} />
+                <a href="https://vk.com/evoprovince" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "var(--ds-muted)", textDecoration: "none", transition: "color .2s" }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ds-white)")}
                   onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ds-muted)")}
                 >
-                  info@evolprov.ru
+                  vk.com/evoprovince
                 </a>
               </li>
             </ul>

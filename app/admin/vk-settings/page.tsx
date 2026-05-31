@@ -22,7 +22,7 @@ export default function AdminVKSettingsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [formData, setFormData] = useState({
-    group_id: "evolprov",
+    group_id: "evoprovince",
     posts_count: 10,
   })
 

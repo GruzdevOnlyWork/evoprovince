@@ -100,17 +100,14 @@ export default async function ServicesPage() {
                         </li>
                       ))}
                     </ul>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", flexWrap: "wrap", gap: 16 }}>
-                      <div style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 32, color: "var(--acid)" }}>
-                        {featured.price}
-                      </div>
-                      <Link href="/#join" style={{
+                    <div style={{ marginTop: "auto" }}>
+                      <Link href="/#join" className="btn-acid" style={{
                         display: "inline-flex", alignItems: "center", gap: 8,
-                        padding: "12px 24px", background: "var(--acid)", color: "var(--on-acid)",
+                        padding: "12px 24px",
                         fontSize: 13, fontWeight: 700, letterSpacing: "0.05em",
                         textDecoration: "none", textTransform: "uppercase",
                       }}>
-                        Записаться <Icon name="arrow" size={14} sw={2} />
+                        Записаться бесплатно <Icon name="arrow" size={14} sw={2} />
                       </Link>
                     </div>
                   </div>
@@ -146,12 +143,8 @@ export default async function ServicesPage() {
                         </li>
                       ))}
                     </ul>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto" }}>
-                      <div style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 24, color: "var(--acid)" }}>{s.price}</div>
-                      <Link href="/#join" style={{
-                        fontSize: 12, fontWeight: 600, color: "var(--acid)",
-                        textDecoration: "none", letterSpacing: "0.04em",
-                      }}>
+                    <div style={{ marginTop: "auto" }}>
+                      <Link href="/#join" style={{ fontSize: 12, fontWeight: 600, color: "var(--acid)", textDecoration: "none", letterSpacing: "0.04em" }}>
                         Записаться →
                       </Link>
                     </div>
@@ -165,28 +158,24 @@ export default async function ServicesPage() {
             </div>
           )}
 
-          {/* Subscriptions block */}
-          <div style={{
-            marginTop: 2, background: "var(--ink-3)",
-            padding: "40px 40px",
-            borderLeft: "3px solid var(--line-2)",
-          }}>
+          {/* Free section banner */}
+          <div style={{ marginTop: 2, background: "rgba(74,222,128,0.08)", padding: "40px 40px", borderLeft: "3px solid var(--acid)" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
               <div>
                 <h3 style={{ fontSize: 22, fontWeight: 800, color: "var(--ds-white)", marginBottom: 8 }}>
-                  Абонементы и скидки
+                  Все тренировки — бесплатно
                 </h3>
                 <p style={{ fontSize: 14, color: "var(--ds-muted)", lineHeight: 1.7, maxWidth: 560 }}>
-                  Приобретайте абонементы на месяц и экономьте до 30%. Для студентов и многодетных семей действуют специальные условия.
+                  Секция «Эволюция Провинции» работает на некоммерческой основе. Приходи на первую тренировку и начинай заниматься уже сегодня.
                 </p>
               </div>
-              <Link href="/#join" className="btn-ghost-line" style={{
+              <Link href="/#join" className="btn-acid" style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "12px 24px",
-                color: "var(--ds-white)", fontSize: 13, fontWeight: 700,
+                fontSize: 13, fontWeight: 700,
                 textDecoration: "none", letterSpacing: "0.04em", whiteSpace: "nowrap",
               }}>
-                Узнать подробнее <Icon name="arrow" size={14} sw={2} />
+                Записаться <Icon name="arrow" size={14} sw={2} />
               </Link>
             </div>
           </div>

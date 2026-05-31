@@ -230,11 +230,9 @@ export default function AdminTournamentsPage() {
               <CardTitle className="text-lg">{tournament.title}</CardTitle>
             </div>
             <div className="flex gap-2">
-              {tournament.is_past && (
-                <Button variant="ghost" size="icon" onClick={() => handleEditWinners(tournament)} title="Победители">
-                  <Trophy className="h-4 w-4" />
-                </Button>
-              )}
+              <Button variant="ghost" size="icon" onClick={() => handleEditWinners(tournament)} title="Победители">
+                <Trophy className="h-4 w-4" />
+              </Button>
               <Button variant="ghost" size="icon" onClick={() => handleEdit(tournament)}>
                 <Pencil className="h-4 w-4" />
               </Button>

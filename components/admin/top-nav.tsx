@@ -21,8 +21,8 @@ const navItems = [
   { href: "/admin/schedule", label: "Расписание" },
   { href: "/admin/services", label: "Услуги" },
   { href: "/admin/tournaments", label: "Турниры" },
-  { href: "/admin/vk-settings", label: "VK Новости" },
-  { href: "/judging", label: "Судейство →", accent: true },
+  { href: "/admin/judging", label: "Судейство", accent: true },
+  { href: "/admin/vk-settings", label: "VK" },
 ]
 
 export function AdminTopNav({ user }: { user: SupabaseUser }) {
