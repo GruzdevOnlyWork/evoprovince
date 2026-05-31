@@ -138,14 +138,9 @@ export default async function TournamentsPage() {
                       <div style={{ marginTop: "auto", paddingTop: 16, borderTop: "1px solid var(--line)" }}>
                         <CountdownTimer date={t.date} />
                       </div>
-                      <Link href="/#join" className="btn-acid" style={{
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                        padding: "12px",
-                        fontSize: 13, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase",
-                        textDecoration: "none",
-                      }}>
-                        Зарегистрироваться <Icon name="arrow" size={14} sw={2} />
-                      </Link>
+                      <a href="https://vk.com/evoprovince" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 12px", border: "1px solid var(--line-2)", color: "var(--ds-muted)", fontSize: 12, textDecoration: "none", letterSpacing: "0.04em" }}>
+                        <Icon name="vk" size={14} sw={1.6} /> Следить в ВКонтакте
+                      </a>
                     </div>
                   </div>
                 ))}

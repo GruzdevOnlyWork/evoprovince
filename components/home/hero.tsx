@@ -2,22 +2,14 @@
 
 import Link from "next/link"
 import { useReveal } from "@/hooks/use-reveal"
-import { useCountUp } from "@/hooks/use-count-up"
 import { Icon } from "@/lib/icons"
 
-
-
-function StatItem({ value, suffix, label }: { value: number; suffix: string; label: string }) {
-  const { count, ref } = useCountUp(value)
-  return (
-    <div style={{ textAlign: "center" }}>
-      <div style={{ fontFamily: "var(--font-anton, Anton)", fontSize: "clamp(36px, 5vw, 56px)", lineHeight: 1, color: "var(--acid)" }}>
-        <span ref={ref}>{count}</span>{suffix}
-      </div>
-      <div style={{ fontSize: 13, color: "var(--ds-muted)", marginTop: 4, letterSpacing: "0.03em" }}>{label}</div>
-    </div>
-  )
-}
+const STATS = [
+  { label: "лет на улице", value: "12" },
+  { label: "воспитанников", value: "640+" },
+  { label: "медалей", value: "38" },
+  { label: "площадок", value: "5" },
+]
 
 export function HeroSection() {
   useReveal()
@@ -43,65 +35,38 @@ export function HeroSection() {
 
         {/* H1 */}
         <h1 className="reveal" data-d="1" style={{ fontFamily: "var(--font-anton, Anton)", lineHeight: 0.92, marginBottom: 32, letterSpacing: "0.01em" }}>
-          <span style={{
-            display: "block",
-            fontSize: "clamp(72px, 12vw, 160px)",
-            color: "transparent",
-            WebkitTextStroke: "2px var(--ds-white)",
-          }}>ЭВОЛЮЦИЯ</span>
-          <span style={{
-            display: "block",
-            fontSize: "clamp(72px, 12vw, 160px)",
-            color: "var(--ds-white)",
-          }}>ПРОВИНЦИИ</span>
+          <span style={{ display: "block", fontSize: "clamp(72px, 12vw, 160px)", color: "transparent", WebkitTextStroke: "2px var(--ds-white)" }}>ЭВОЛЮЦИЯ</span>
+          <span style={{ display: "block", fontSize: "clamp(72px, 12vw, 160px)", color: "var(--ds-white)" }}>ПРОВИНЦИИ</span>
         </h1>
 
-        {/* Buttons */}
+        {/* Buttons — informational only */}
         <div className="reveal" data-d="2" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 64 }}>
           <Link
             href="/services"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              padding: "14px 28px", background: "var(--acid)", color: "var(--on-acid)",
-              fontSize: 14, fontWeight: 700, letterSpacing: "0.05em",
-              textDecoration: "none", textTransform: "uppercase",
-              transition: "background .2s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--acid-deep)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "var(--acid)")}
+            className="btn-acid"
+            style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", fontSize: 14, fontWeight: 700, letterSpacing: "0.05em", textDecoration: "none", textTransform: "uppercase" }}
           >
-            Пробное занятие бесплатно <Icon name="arrow" size={16} sw={2} />
+            Программы тренировок <Icon name="arrow" size={16} sw={2} />
           </Link>
           <Link
-            href="/services"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              padding: "14px 28px",
-              border: "1px solid var(--line-2)", color: "var(--ds-white)",
-              fontSize: 14, fontWeight: 700, letterSpacing: "0.05em",
-              textDecoration: "none", textTransform: "uppercase",
-              transition: "border-color .2s, background .2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "var(--ds-white)"
-              e.currentTarget.style.background = "rgba(245,245,240,0.05)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "var(--line-2)"
-              e.currentTarget.style.background = "transparent"
-            }}
+            href="/schedule"
+            className="btn-ghost-line"
+            style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", color: "var(--ds-white)", fontSize: 14, fontWeight: 700, letterSpacing: "0.05em", textDecoration: "none", textTransform: "uppercase" }}
           >
-            Смотреть программу
+            Расписание
           </Link>
         </div>
 
         {/* Stats */}
-        <div className="reveal" data-d="3" style={{
-          display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 32, paddingTop: 32,
-          borderTop: "1px solid var(--line)",
-          maxWidth: 560,
-        }}>
+        <div className="reveal" data-d="3" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32, paddingTop: 32, borderTop: "1px solid var(--line)", maxWidth: 560 }}>
+          {STATS.map((s) => (
+            <div key={s.label} style={{ textAlign: "center" }}>
+              <div style={{ fontFamily: "var(--font-anton, Anton)", fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1, color: "var(--acid)" }}>
+                {s.value}
+              </div>
+              <div style={{ fontSize: 12, color: "var(--ds-muted)", marginTop: 4, letterSpacing: "0.03em" }}>{s.label}</div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -4,7 +4,6 @@ import { Footer } from "@/components/footer"
 import { HeroSection } from "@/components/home/hero"
 import { ScheduleTabs } from "@/components/home/schedule-tabs"
 import { FaqSection } from "@/components/home/faq"
-import { JoinSection } from "@/components/home/join"
 import { createClient } from "@/lib/supabase/server"
 import { getVKPostsForPage, type ParsedVKPost } from "@/lib/vk-api"
 import { Icon } from "@/lib/icons"
@@ -306,18 +305,25 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* 7. JOIN CTA */}
-        <section style={{ padding: "100px var(--pad-x)", maxWidth: "var(--maxw)", margin: "0 auto" }} id="join">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
+        {/* 7. CONTACTS INFO */}
+        <section style={{ background: "var(--ink-2)", padding: "80px var(--pad-x)" }} id="contacts">
+          <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
             <div className="reveal">
-              <SectionLabel>Запись</SectionLabel>
-              <SectionTitle>НАЧНИ<br />СЕЙЧАС</SectionTitle>
-              <p style={{ fontSize: 14, color: "var(--ds-muted)", lineHeight: 1.7, marginTop: -24 }}>
-                Первое занятие бесплатно. Приходи в любую среду в 18:00 на открытую тренировку.
+              <SectionLabel>Контакты</SectionLabel>
+              <h2 style={{ fontFamily: "var(--font-anton, Anton)", fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1, color: "var(--ds-white)", marginBottom: 12 }}>
+                НАЙДИ НАС
+              </h2>
+              <p style={{ fontSize: 14, color: "var(--ds-muted)", lineHeight: 1.7, maxWidth: 400 }}>
+                Саратовская обл., Новоузенск. Приходи на открытую тренировку — расписание на сайте.
               </p>
             </div>
-            <div className="reveal" data-d="1">
-              <JoinSection services={services.map((s) => ({ id: s.id, title: s.title }))} />
+            <div className="reveal" data-d="1" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <a href="https://vk.com/evoprovince" target="_blank" rel="noopener noreferrer" className="btn-ghost-line" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", color: "var(--ds-white)", fontSize: 13, fontWeight: 700, letterSpacing: "0.04em", textDecoration: "none" }}>
+                <Icon name="vk" size={16} sw={1.6} /> Группа ВКонтакте
+              </a>
+              <Link href="/schedule" className="btn-ghost-line" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", color: "var(--ds-white)", fontSize: 13, fontWeight: 700, letterSpacing: "0.04em", textDecoration: "none" }}>
+                <Icon name="cal" size={16} sw={1.6} /> Расписание
+              </Link>
             </div>
           </div>
         </section>

@@ -103,14 +103,9 @@ export default async function ServicesPage() {
                       ))}
                     </ul>
                     <div style={{ marginTop: "auto" }}>
-                      <Link href="/#join" className="btn-acid" style={{
-                        display: "inline-flex", alignItems: "center", gap: 8,
-                        padding: "12px 24px",
-                        fontSize: 13, fontWeight: 700, letterSpacing: "0.05em",
-                        textDecoration: "none", textTransform: "uppercase",
-                      }}>
-                        Записаться бесплатно <Icon name="arrow" size={14} sw={2} />
-                      </Link>
+                      <a href="https://vk.com/evoprovince" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--acid)", textDecoration: "none" }}>
+                        <Icon name="vk" size={14} sw={1.6} /> Группа ВКонтакте
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -146,9 +141,9 @@ export default async function ServicesPage() {
                       ))}
                     </ul>
                     <div style={{ marginTop: "auto" }}>
-                      <Link href="/#join" style={{ fontSize: 12, fontWeight: 600, color: "var(--acid)", textDecoration: "none", letterSpacing: "0.04em" }}>
-                        Записаться →
-                      </Link>
+                      <a href="https://vk.com/evoprovince" target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "var(--acid)", textDecoration: "none" }}>
+                        <Icon name="vk" size={12} sw={1.4} style={{ marginRight: 4 } as React.CSSProperties} />vk.com/evoprovince
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -171,14 +166,9 @@ export default async function ServicesPage() {
                   Секция «Эволюция Провинции» работает на некоммерческой основе. Приходи на первую тренировку и начинай заниматься уже сегодня.
                 </p>
               </div>
-              <Link href="/#join" className="btn-acid" style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "12px 24px",
-                fontSize: 13, fontWeight: 700,
-                textDecoration: "none", letterSpacing: "0.04em", whiteSpace: "nowrap",
-              }}>
-                Записаться <Icon name="arrow" size={14} sw={2} />
-              </Link>
+              <a href="https://vk.com/evoprovince" target="_blank" rel="noopener noreferrer" className="btn-ghost-line" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", color: "var(--ds-white)", fontSize: 13, fontWeight: 700, textDecoration: "none", letterSpacing: "0.04em", whiteSpace: "nowrap" }}>
+                <Icon name="vk" size={14} sw={1.6} /> Группа ВКонтакте
+              </a>
             </div>
           </div>
         </div>
