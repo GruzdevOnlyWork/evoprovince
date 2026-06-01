@@ -32,15 +32,8 @@ export function Footer() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 48, marginBottom: 48 }}>
           {/* Brand */}
           <div>
-            <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 10, textDecoration: "none", marginBottom: 16 }}>
-              <span style={{
-                display: "inline-flex", alignItems: "center", justifyContent: "center",
-                width: 32, height: 32, background: "var(--acid)", color: "var(--on-acid)",
-                fontFamily: "var(--font-anton, Anton)", fontSize: 18,
-              }}>Э</span>
-              <span style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 14, letterSpacing: "0.04em", color: "var(--ds-white)", textTransform: "uppercase" }}>
-                Эволюция Провинции
-              </span>
+            <Link href="/" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none", marginBottom: 16 }}>
+              <img src="/logo.png" alt="Эволюция Провинции" height={32} style={{ height: 32, width: "auto", display: "block" }} />
             </Link>
             <p style={{ fontSize: 13, color: "var(--ds-muted)", lineHeight: 1.7, maxWidth: 240 }}>
               Бесплатная секция уличного воркаута. Тренировки и соревнования для всех возрастов.

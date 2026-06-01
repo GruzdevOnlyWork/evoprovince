@@ -38,11 +38,8 @@ export function Header() {
     >
       <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "0 var(--pad-x)", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
         {/* Logo */}
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, background: "var(--acid)", color: "var(--on-acid)", fontFamily: "var(--font-anton, Anton)", fontSize: 18, fontWeight: 400, lineHeight: 1 }}>Э</span>
-          <span style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 15, letterSpacing: "0.04em", color: "var(--ds-white)", textTransform: "uppercase" }}>
-            Эволюция Провинции
-          </span>
+        <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+          <img src="/logo.png" alt="Эволюция Провинции" height={36} style={{ height: 36, width: "auto", display: "block" }} />
         </Link>
 
         {/* Desktop nav */}
