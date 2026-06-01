@@ -63,6 +63,7 @@ export default function AdminServicesPage() {
       icon: formData.icon,
       title: formData.title,
       description: formData.description,
+      price: "",
       features: featuresArray,
       is_popular: formData.is_popular,
       sort_order: formData.sort_order,
