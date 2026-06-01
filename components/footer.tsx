@@ -74,7 +74,16 @@ export function Footer() {
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
               <li style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
                 <Icon name="pin" size={14} className="shrink-0" style={{ color: "var(--acid)", marginTop: 1 } as React.CSSProperties} />
-                <span style={{ fontSize: 13, color: "var(--ds-muted)" }}>Саратовская обл., Новоузенск</span>
+                <span style={{ fontSize: 13, color: "var(--ds-muted)" }}>ул. 10-й Годовщины Октября, 13А, Буй</span>
+              </li>
+              <li style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Icon name="send" size={14} className="shrink-0" style={{ color: "var(--acid)" } as React.CSSProperties} />
+                <a href="tel:+79969303549" style={{ fontSize: 13, color: "var(--ds-muted)", textDecoration: "none", transition: "color .2s" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ds-white)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ds-muted)")}
+                >
+                  +7 (996) 930-35-49
+                </a>
               </li>
               <li style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Icon name="vk" size={14} className="shrink-0" style={{ color: "var(--acid)" } as React.CSSProperties} />

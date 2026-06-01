@@ -310,7 +310,7 @@ export default async function HomePage() {
                 НАЙДИ НАС
               </h2>
               <p style={{ fontSize: 14, color: "var(--ds-muted)", lineHeight: 1.7, maxWidth: 400 }}>
-                Саратовская обл., Новоузенск. Приходи на открытую тренировку расписание на сайте.
+                ул. 10-й Годовщины Октября, 13А, Буй. Приходи на открытую тренировку.
               </p>
             </div>
             <div className="reveal" data-d="1" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>

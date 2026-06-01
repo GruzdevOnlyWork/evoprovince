@@ -56,9 +56,7 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold mb-1">Адрес</h3>
                       <p className="text-muted-foreground">
-                        г. Саратов, ул. Спортивная, 15
-                        <br />
-                        Площадка "Эволюция"
+                        ул. 10-й Годовщины Октября, 13А, Буй
                       </p>
                     </div>
                   </div>
@@ -69,8 +67,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Телефон</h3>
-                      <a href="tel:+79123456789" className="text-primary hover:underline">
-                        +7 (912) 345-67-89
+                      <a href="tel:+79969303549" className="text-primary hover:underline">
+                        +7 (996) 930-35-49
                       </a>
                     </div>
                   </div>
