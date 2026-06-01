@@ -39,7 +39,7 @@ export function Header() {
       <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "0 var(--pad-x)", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
         {/* Logo */}
         <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-          <img src="/logo.png" alt="Эволюция Провинции" height={48} style={{ height: 48, width: "auto", display: "block" }} />
+          <img src="/logo.png" alt="Эволюция Провинции" height={32} style={{ height: 32, width: "auto", display: "block" }} />
         </Link>
 
         {/* Desktop nav */}
