@@ -9,8 +9,8 @@ export async function GET(request: Request) {
   const hasToken = !!process.env.VK_API_TOKEN
   const tokenPreview = hasToken ? `${process.env.VK_API_TOKEN?.substring(0, 10)}...` : "NOT SET"
 
-  console.log("[v0] VK API Test - Token present:", hasToken)
-  console.log("[v0] VK API Test - Group:", groupId)
+  console.log("VK API Test - Token present:", hasToken)
+  console.log("VK API Test - Group:", groupId)
 
   try {
     const posts = await fetchVKPosts(groupId, count)

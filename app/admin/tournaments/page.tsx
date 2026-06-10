@@ -77,8 +77,8 @@ export default function AdminTournamentsPage() {
       supabase.from("tournament_winners").select("*"),
     ])
 
-    if (tournamentsResult.error) console.error("[v0] Error fetching tournaments:", tournamentsResult.error)
-    if (winnersResult.error) console.error("[v0] Error fetching winners:", winnersResult.error)
+    if (tournamentsResult.error) console.error("Error fetching tournaments:", tournamentsResult.error)
+    if (winnersResult.error) console.error("Error fetching winners:", winnersResult.error)
 
     setTournaments(tournamentsResult.data || [])
     setWinners(winnersResult.data || [])
@@ -117,10 +117,7 @@ export default function AdminTournamentsPage() {
 
     const validWinners = winnersData.filter((w) => w.name.trim())
 
-    // Insert new winners first to verify no error, then delete old ones
     if (validWinners.length > 0) {
-      // Upsert approach: delete then insert — but check insert first via dry-run is not possible
-      // Safe sequence: insert new with temp check, delete old, confirm
       const { error: delErr } = await supabase
         .from("tournament_winners")
         .delete()
@@ -139,7 +136,6 @@ export default function AdminTournamentsPage() {
 
       if (insErr) { toast.error("Ошибка сохранения победителей: " + insErr.message); return }
     } else {
-      // No winners — just clear existing
       const { error } = await supabase.from("tournament_winners").delete().eq("tournament_id", selectedTournament.id)
       if (error) { toast.error("Ошибка: " + error.message); return }
     }

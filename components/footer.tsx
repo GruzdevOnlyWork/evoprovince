@@ -30,7 +30,6 @@ export function Footer() {
     <footer style={{ background: "var(--ink-2)", borderTop: "1px solid var(--line)", position: "relative" }}>
       <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "64px var(--pad-x) 32px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 48, marginBottom: 48 }}>
-          {/* Brand */}
           <div>
             <Link href="/" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none", marginBottom: 16 }}>
               <img src="/logo.png" alt="Эволюция Провинции" height={32} style={{ height: 32, width: "auto", display: "block" }} />
@@ -40,7 +39,6 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Nav */}
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", color: "var(--ds-faint)", textTransform: "uppercase", marginBottom: 16 }}>
               Навигация
@@ -59,7 +57,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contacts */}
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", color: "var(--ds-faint)", textTransform: "uppercase", marginBottom: 16 }}>
               Контакты
@@ -90,7 +87,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Socials */}
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", color: "var(--ds-faint)", textTransform: "uppercase", marginBottom: 16 }}>
               Мы в соцсетях
@@ -128,7 +124,6 @@ export function Footer() {
 
       </div>
 
-      {/* Scroll-to-top */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label="Наверх"

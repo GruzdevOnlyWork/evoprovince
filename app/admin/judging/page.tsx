@@ -73,7 +73,6 @@ export default function AdminJudgingPage() {
 
   useEffect(() => { fetchAll() }, [])
 
-  // Generic delete helper
   const del = async (table: string, id: string) => {
     if (!confirm("Удалить запись?")) return
     const supabase = getClient()
@@ -115,27 +114,22 @@ export default function AdminJudgingPage() {
             <TabsTrigger value="ranks">Ранги</TabsTrigger>
           </TabsList>
 
-          {/* CRITERIA */}
           <TabsContent value="criteria">
             <CriteriaTab criteria={criteria} onSave={fetchAll} onDelete={(id) => del("judging_criteria", id)} getClient={getClient} />
           </TabsContent>
 
-          {/* TIERS */}
           <TabsContent value="tiers">
             <TiersTab tiers={tiers} onSave={fetchAll} onDelete={(id) => del("judging_tiers", id)} getClient={getClient} />
           </TabsContent>
 
-          {/* ELEMENTS */}
           <TabsContent value="elements">
             <ElementsTab elements={elements} tiers={tiers} onSave={fetchAll} onDelete={(id) => del("judging_elements", id)} getClient={getClient} />
           </TabsContent>
 
-          {/* DEDUCTIONS */}
           <TabsContent value="deductions">
             <DeductionsTab deductions={deductions} onSave={fetchAll} onDelete={(id) => del("judging_deductions", id)} getClient={getClient} />
           </TabsContent>
 
-          {/* RANKS */}
           <TabsContent value="ranks">
             <RanksTab ranks={ranks} onSave={fetchAll} onDelete={(id) => del("judging_ranks", id)} getClient={getClient} />
           </TabsContent>
@@ -145,7 +139,6 @@ export default function AdminJudgingPage() {
   )
 }
 
-// ── Criteria Tab ──
 function CriteriaTab({ criteria, onSave, onDelete, getClient }: {
   criteria: Criterion[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {
@@ -209,7 +202,6 @@ function CriteriaTab({ criteria, onSave, onDelete, getClient }: {
   )
 }
 
-// ── Tiers Tab ──
 function TiersTab({ tiers, onSave, onDelete, getClient }: {
   tiers: Tier[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {
@@ -270,7 +262,6 @@ function TiersTab({ tiers, onSave, onDelete, getClient }: {
   )
 }
 
-// ── Elements Tab ──
 function ElementsTab({ elements, tiers, onSave, onDelete, getClient }: {
   elements: Element[]; tiers: Tier[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {
@@ -360,7 +351,6 @@ function ElementsTab({ elements, tiers, onSave, onDelete, getClient }: {
   )
 }
 
-// ── Deductions Tab ──
 function DeductionsTab({ deductions, onSave, onDelete, getClient }: {
   deductions: Deduction[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {
@@ -418,7 +408,6 @@ function DeductionsTab({ deductions, onSave, onDelete, getClient }: {
   )
 }
 
-// ── Ranks Tab ──
 function RanksTab({ ranks, onSave, onDelete, getClient }: {
   ranks: Rank[]; onSave: () => void; onDelete: (id: string) => void; getClient: () => ReturnType<typeof createClient> | null
 }) {

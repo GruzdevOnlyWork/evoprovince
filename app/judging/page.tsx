@@ -31,7 +31,6 @@ function TierBadge({ code, color }: { code: string; color?: string }) {
   )
 }
 
-// Static fallback data always available
 const STATIC_CRITERIA: Criterion[] = JUDGE_DATA.criteria.map((x, i) => ({ id: x.id, name: x.name, max_score: x.max, color: x.color, sort_order: i }))
 const STATIC_TIERS: Tier[] = JUDGE_DATA.tiers.map((x, i) => ({ id: x.id, code: x.id, label: x.label, pts: x.pts, sort_order: i }))
 const STATIC_ELEMENTS: JElement[] = [
@@ -44,14 +43,12 @@ const STATIC_RANKS: Rank[] = JUDGE_DATA.ranks.map((x, i) => ({ id: String(x.min)
 export default function JudgingPage() {
   useReveal()
 
-  // Start with static data immediately — no loading state
   const [criteria, setCriteria]     = useState<Criterion[]>(STATIC_CRITERIA)
   const [tiers, setTiers]           = useState<Tier[]>(STATIC_TIERS)
   const [elements, setElements]     = useState<JElement[]>(STATIC_ELEMENTS)
   const [deductions, setDeductions] = useState<Deduction[]>(STATIC_DEDUCTIONS)
   const [ranks, setRanks]           = useState<Rank[]>(STATIC_RANKS)
 
-  // Try to load from DB asynchronously; on any error keep static data
   useEffect(() => {
     let cancelled = false
     try {
@@ -71,7 +68,6 @@ export default function JudgingPage() {
         if (r.data?.length) setRanks(r.data)
       }).catch(() => { /* keep static data */ })
     } catch {
-      // Supabase env vars not configured — static data stays
     }
     return () => { cancelled = true }
   }, [])
@@ -79,7 +75,6 @@ export default function JudgingPage() {
   const total = criteria.reduce((s, c) => s + c.max_score, 0)
   const tierMap = Object.fromEntries(tiers.map(t => [t.code, t]))
 
-  // Scorecard state
   const [athleteName, setAthleteName] = useState("")
   const [scores, setScores]     = useState<Record<string, number>>({})
   const [deds, setDeds]         = useState<Record<string, number>>({})
@@ -109,7 +104,6 @@ export default function JudgingPage() {
     <>
       <Header />
       <main style={{ paddingTop: 80, paddingBottom: 80 }}>
-        {/* Hero */}
         <div style={{ background: "var(--ink-2)", borderBottom: "1px solid var(--line)", padding: "48px var(--pad-x)" }}>
           <div style={{ maxWidth: "var(--maxw)", margin: "0 auto" }}>
             <div className="reveal" style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -129,7 +123,6 @@ export default function JudgingPage() {
 
         <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "64px var(--pad-x)", display: "flex", flexDirection: "column", gap: 80 }}>
 
-          {/* Criteria */}
           <section>
             <h2 className="reveal" style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 32, marginBottom: 24, color: "var(--ds-white)" }}>КРИТЕРИИ</h2>
             <div className="reveal" data-d="1" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 2 }}>
@@ -148,7 +141,6 @@ export default function JudgingPage() {
             </div>
           </section>
 
-          {/* Tiers + Elements */}
           <section>
             <h2 className="reveal" style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 32, marginBottom: 24, color: "var(--ds-white)" }}>ТИРЫ ЭЛЕМЕНТОВ</h2>
             <div className="reveal" data-d="1" style={{ display: "flex", gap: 2, flexWrap: "wrap", marginBottom: 32 }}>
@@ -190,7 +182,6 @@ export default function JudgingPage() {
             </div>
           </section>
 
-          {/* Deductions */}
           <section>
             <h2 className="reveal" style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 32, marginBottom: 24, color: "var(--ds-white)" }}>СБАВКИ</h2>
             <div className="reveal" data-d="1" style={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
@@ -203,11 +194,9 @@ export default function JudgingPage() {
             </div>
           </section>
 
-          {/* Scorecard */}
           <section>
             <h2 className="reveal" style={{ fontFamily: "var(--font-anton, Anton)", fontSize: 32, marginBottom: 24, color: "var(--ds-white)" }}>СУДЕЙСКАЯ КАРТОЧКА</h2>
             <div className="reveal" data-d="1" style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 2, alignItems: "start" }}>
-              {/* Controls */}
               <div style={{ background: "var(--ink-2)", padding: 32, display: "flex", flexDirection: "column", gap: 24 }}>
                 <div>
                   <label style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ds-faint)", display: "block", marginBottom: 8 }}>Имя спортсмена</label>
@@ -249,7 +238,6 @@ export default function JudgingPage() {
                 </button>
               </div>
 
-              {/* Result */}
               <div style={{ background: "var(--ink-2)", padding: 32, position: "sticky", top: 80, display: "flex", flexDirection: "column", gap: 24 }}>
                 {athleteName && <div style={{ fontSize: 14, fontWeight: 600, color: "var(--ds-muted)", borderBottom: "1px solid var(--line)", paddingBottom: 16 }}>{athleteName}</div>}
                 <div>

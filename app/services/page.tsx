@@ -38,7 +38,6 @@ export default async function ServicesPage() {
       <Header />
       <RevealInit />
       <main style={{ paddingTop: 80 }}>
-        {/* Hero */}
         <div style={{ background: "var(--ink-2)", borderBottom: "1px solid var(--line)", padding: "64px var(--pad-x)" }}>
           <div style={{ maxWidth: "var(--maxw)", margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -61,11 +60,9 @@ export default async function ServicesPage() {
           </div>
         </div>
 
-        {/* Programs bento */}
         <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "64px var(--pad-x)" }}>
           {services.length > 0 ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 2 }}>
-              {/* Featured */}
               {featured && (
                 <div style={{ gridColumn: "span 2" }}>
                   <div style={{
@@ -111,7 +108,6 @@ export default async function ServicesPage() {
                 </div>
               )}
 
-              {/* Others */}
               {others.map((s, i) => (
                 <div key={s.id}>
                   <div className="card-hover" style={{
@@ -155,7 +151,6 @@ export default async function ServicesPage() {
             </div>
           )}
 
-          {/* Free section banner */}
           <div style={{ marginTop: 2, background: "rgba(74,222,128,0.08)", padding: "40px 40px", borderLeft: "3px solid var(--acid)" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
               <div>

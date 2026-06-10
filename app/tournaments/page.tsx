@@ -56,7 +56,6 @@ export default async function TournamentsPage() {
       <Header />
       <RevealInit />
       <main style={{ paddingTop: 80 }}>
-        {/* Hero */}
         <div style={{ background: "var(--ink-2)", borderBottom: "1px solid var(--line)", padding: "64px var(--pad-x)" }}>
           <div style={{ maxWidth: "var(--maxw)", margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -80,7 +79,6 @@ export default async function TournamentsPage() {
         </div>
 
         <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "64px var(--pad-x)", display: "flex", flexDirection: "column", gap: 80 }}>
-          {/* Upcoming */}
           <section>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
               <span style={{ width: 20, height: 1, background: "var(--acid)", display: "inline-block" }} />
@@ -144,7 +142,6 @@ export default async function TournamentsPage() {
             )}
           </section>
 
-          {/* Past */}
           <section>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
               <span style={{ width: 20, height: 1, background: "var(--line-2)", display: "inline-block" }} />

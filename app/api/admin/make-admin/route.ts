@@ -12,7 +12,6 @@ export async function POST() {
     return NextResponse.json({ error: "Не авторизован" }, { status: 401 })
   }
 
-  // Update user metadata to add is_admin flag
   const { data, error } = await supabase.auth.updateUser({
     data: {
       is_admin: true,
@@ -20,7 +19,7 @@ export async function POST() {
   })
 
   if (error) {
-    console.error("[v0] Error updating user metadata:", error)
+    console.error("Error updating user metadata:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 

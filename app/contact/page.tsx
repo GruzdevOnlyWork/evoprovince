@@ -22,7 +22,6 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
     console.log("Form submitted:", formData)
     alert("Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.")
     setFormData({ name: "", email: "", phone: "", message: "" })
@@ -41,7 +40,6 @@ export default function ContactPage() {
           </div>
 
           <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8">
-            {/* Contact Information */}
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -131,7 +129,6 @@ export default function ContactPage() {
               </Card>
             </div>
 
-            {/* Contact Form */}
             <div>
               <Card>
                 <CardHeader>
@@ -204,7 +201,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Map Section */}
           <div className="max-w-6xl mx-auto mt-12">
             <Card>
               <CardHeader>
@@ -213,7 +209,6 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent className="p-0">
                 <div className="w-full h-96 bg-muted rounded-b-lg overflow-hidden">
-                  {/* Yandex Maps iframe - replace with actual coordinates */}
                   <iframe
                     src="https://yandex.ru/map-widget/v1/?ll=46.034266%2C51.533557&z=15&l=map&pt=46.034266,51.533557,pm2rdm"
                     width="100%"

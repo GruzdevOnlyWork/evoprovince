@@ -27,7 +27,6 @@ export default async function SchedulePage() {
       <Header />
       <RevealInit />
       <main style={{ paddingTop: 80 }}>
-        {/* Hero */}
         <div style={{ background: "var(--ink-2)", borderBottom: "1px solid var(--line)", padding: "64px var(--pad-x)" }}>
           <div style={{ maxWidth: "var(--maxw)", margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -50,7 +49,6 @@ export default async function SchedulePage() {
           </div>
         </div>
 
-        {/* Schedule */}
         <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "64px var(--pad-x)" }}>
           <ScheduleTabs schedule={schedule} />
         </div>

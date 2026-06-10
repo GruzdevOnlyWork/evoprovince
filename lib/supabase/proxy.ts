@@ -29,7 +29,6 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protect admin routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
     if (!user) {
       const url = request.nextUrl.clone()
@@ -37,7 +36,6 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
-    // Check if user is admin
     const isAdmin = user.user_metadata?.is_admin === true
     if (!isAdmin && request.nextUrl.pathname !== "/admin/unauthorized") {
       const url = request.nextUrl.clone()

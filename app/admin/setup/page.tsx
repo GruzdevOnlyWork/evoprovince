@@ -34,9 +34,7 @@ export default function AdminSetupPage() {
 
       if (data.success) {
         setMessage({ type: "success", text: "Права администратора успешно назначены!" })
-        // Refresh user info
         await checkUser()
-        // Redirect to admin after a short delay
         setTimeout(() => {
           window.location.href = "/admin"
         }, 2000)

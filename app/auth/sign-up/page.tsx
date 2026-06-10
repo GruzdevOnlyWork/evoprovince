@@ -28,11 +28,11 @@ export default function SignUpPage() {
         setError(result.error)
         setIsLoading(false)
       } else if (result?.success && result?.redirectTo) {
-        console.log("[v0] Sign up successful, redirecting to:", result.redirectTo)
+        console.log("Sign up successful, redirecting to:", result.redirectTo)
         router.push(result.redirectTo)
       }
     } catch (err) {
-      console.error("[v0] Sign up error:", err)
+      console.error("Sign up error:", err)
       setError(err instanceof Error ? err.message : "Произошла ошибка")
       setIsLoading(false)
     }

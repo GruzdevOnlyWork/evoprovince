@@ -39,7 +39,6 @@ export function AdminTopNav({ user }: { user: SupabaseUser }) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        {/* Left: Back to site + Logo */}
         <div className="flex items-center gap-6">
           <Link
             href="/"
@@ -54,7 +53,6 @@ export function AdminTopNav({ user }: { user: SupabaseUser }) {
           </Link>
         </div>
 
-        {/* Center: Navigation */}
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href
@@ -87,7 +85,6 @@ export function AdminTopNav({ user }: { user: SupabaseUser }) {
           })}
         </nav>
 
-        {/* Right: User menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
@@ -109,7 +106,6 @@ export function AdminTopNav({ user }: { user: SupabaseUser }) {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Mobile nav dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="md:hidden">
             <Button variant="outline" size="sm">

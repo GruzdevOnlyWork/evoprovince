@@ -1,4 +1,3 @@
-// VK API integration for fetching posts from VK community
 
 export interface VKPost {
   id: number
@@ -57,12 +56,10 @@ function getBestPhotoUrl(photo: VKAttachment["photo"]): string | null {
 
 function getVideoThumb(video: VKAttachment["video"]): string | null {
   if (!video) return null
-  // Try image array (largest first)
   if (video.image?.length) {
     const sorted = [...video.image].sort((a, b) => b.width * b.height - a.width * a.height)
     return sorted[0]?.url || null
   }
-  // Try first_frame
   if (video.first_frame?.length) {
     const sorted = [...video.first_frame].sort((a, b) => b.width * b.height - a.width * a.height)
     return sorted[0]?.url || null
@@ -72,15 +69,13 @@ function getVideoThumb(video: VKAttachment["video"]): string | null {
 }
 
 function getBestImage(attachments: VKAttachment[] = []): { url: string | null; isVideo: boolean } {
-  // Prefer photo attachment
+
   const photo = attachments.find((a) => a.type === "photo")
   if (photo?.photo) return { url: getBestPhotoUrl(photo.photo), isVideo: false }
 
-  // Fall back to video thumbnail
   const video = attachments.find((a) => a.type === "video")
   if (video?.video) return { url: getVideoThumb(video.video), isVideo: true }
 
-  // Doc preview
   const doc = attachments.find((a) => a.type === "doc")
   if (doc?.doc?.preview?.photo?.sizes?.length) {
     const sorted = [...doc.doc.preview.photo.sizes].sort((a, b) => b.width - a.width)
@@ -93,7 +88,7 @@ function getBestImage(attachments: VKAttachment[] = []): { url: string | null; i
 export async function fetchVKPosts(groupId = "evoprovince", count = 10): Promise<ParsedVKPost[]> {
   const apiToken = process.env.VK_API_TOKEN
   if (!apiToken) {
-    console.error("[v0] VK_API_TOKEN is not set")
+    console.error("VK_API_TOKEN is not set")
     return []
   }
 
@@ -105,13 +100,13 @@ export async function fetchVKPosts(groupId = "evoprovince", count = 10): Promise
     )
 
     if (!response.ok) {
-      console.error("[v0] VK API request failed:", response.status)
+      console.error("VK API request failed:", response.status)
       return []
     }
 
     const data: VKApiResponse = await response.json()
     if (data.error) {
-      console.error("[v0] VK API error:", data.error.error_msg)
+      console.error("VK API error:", data.error.error_msg)
       return []
     }
     if (!data.response?.items) return []
@@ -125,14 +120,13 @@ export async function fetchVKPosts(groupId = "evoprovince", count = 10): Promise
         date: new Date(item.date * 1000).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }),
         image: imageUrl,
         isVideo,
-        // owner_id is negative for groups (e.g. -12345), gives URL: /wall-12345_456
         link: item.owner_id
           ? `https://vk.com/wall${item.owner_id}_${item.id}`
           : `https://vk.com/${groupId}`,
       }
     })
   } catch (error) {
-    console.error("[v0] Error fetching VK posts:", error)
+    console.error("Error fetching VK posts:", error)
     return []
   }
 }

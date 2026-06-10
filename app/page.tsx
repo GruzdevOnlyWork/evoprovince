@@ -75,10 +75,8 @@ export default async function HomePage() {
       <Header />
       <RevealInit />
       <main>
-        {/* 1. HERO */}
         <HeroSection />
 
-        {/* 2. TICKER */}
         <div style={{
           background: "var(--acid)", color: "var(--on-acid)",
           padding: "14px 0", overflow: "hidden", whiteSpace: "nowrap",
@@ -99,7 +97,6 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* 3. PROGRAMS */}
         <section style={{ padding: "100px var(--pad-x)", maxWidth: "var(--maxw)", margin: "0 auto" }} id="programs">
           <div className="reveal">
             <SectionLabel>Программы</SectionLabel>
@@ -108,7 +105,6 @@ export default async function HomePage() {
 
           {services.length > 0 ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 2 }}>
-              {/* Featured */}
               {featured && (
                 <div className="reveal" style={{ gridColumn: "span 2" }}>
                   <div style={{
@@ -150,7 +146,6 @@ export default async function HomePage() {
                   </div>
                 </div>
               )}
-              {/* Others */}
               {others.map((s, i) => (
                 <div key={s.id} className="reveal" data-d={String(((i % 3) + 1) as 1 | 2 | 3)}>
                   <div className="card-hover" style={{
@@ -189,7 +184,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* 4. SCHEDULE */}
         <section style={{ background: "var(--ink-2)", padding: "100px var(--pad-x)" }} id="schedule">
           <div style={{ maxWidth: "var(--maxw)", margin: "0 auto" }}>
             <div className="reveal">
@@ -200,7 +194,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* 5. VIDEO GALLERY */}
         <section style={{ padding: "100px var(--pad-x)", maxWidth: "var(--maxw)", margin: "0 auto" }} id="videos">
           <div className="reveal" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 48, flexWrap: "wrap", gap: 16 }}>
             <div>
@@ -235,7 +228,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* 6. NEWS */}
         {posts.length > 0 && (
           <section style={{ padding: "100px var(--pad-x)", maxWidth: "var(--maxw)", margin: "0 auto" }} id="news">
             <div className="reveal" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 48, flexWrap: "wrap", gap: 16 }}>
@@ -288,7 +280,6 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* 6. FAQ */}
         <section style={{ background: "var(--ink-2)", padding: "100px var(--pad-x)" }} id="faq">
           <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "start" }}>
             <div className="reveal">
@@ -301,7 +292,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* 7. CONTACTS INFO */}
         <section style={{ background: "var(--ink-2)", padding: "80px var(--pad-x)" }} id="contacts">
           <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
             <div className="reveal">

@@ -39,12 +39,12 @@ export async function signUp(formData: FormData) {
   })
 
   if (error) {
-    console.log("[v0] Sign up error:", error)
+    console.log("Sign up error:", error)
     return { error: error.message }
   }
 
   if (data.user) {
-    console.log("[v0] User created successfully:", data.user.id)
+    console.log("User created successfully:", data.user.id)
     revalidatePath("/", "layout")
     return { success: true, redirectTo: "/auth/sign-up-success" }
   }
@@ -68,11 +68,11 @@ export async function signIn(formData: FormData) {
   })
 
   if (error) {
-    console.log("[v0] Sign in error:", error)
+    console.log("Sign in error:", error)
     return { error: error.message }
   }
 
-  console.log("[v0] User signed in successfully")
+  console.log("User signed in successfully")
   revalidatePath("/", "layout")
   return { success: true, redirectTo: "/admin" }
 }
@@ -82,11 +82,11 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut()
 
   if (error) {
-    console.log("[v0] Sign out error:", error)
+    console.log("Sign out error:", error)
     return { error: error.message }
   }
 
-  console.log("[v0] User signed out successfully")
+  console.log("User signed out successfully")
   revalidatePath("/", "layout")
   return { success: true, redirectTo: "/" }
 }

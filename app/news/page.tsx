@@ -24,7 +24,6 @@ export default async function NewsPage() {
       <Header />
       <RevealInit />
       <main style={{ paddingTop: 80 }}>
-        {/* Hero */}
         <div style={{ background: "var(--ink-2)", borderBottom: "1px solid var(--line)", padding: "64px var(--pad-x)" }}>
           <div style={{ maxWidth: "var(--maxw)", margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -47,7 +46,6 @@ export default async function NewsPage() {
           </div>
         </div>
 
-        {/* Posts */}
         <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "64px var(--pad-x)" }}>
           {news.length === 0 ? (
             <div style={{ padding: "64px 0", textAlign: "center", color: "var(--ds-muted)", fontSize: 14 }}>
@@ -109,7 +107,6 @@ export default async function NewsPage() {
             </div>
           )}
 
-          {/* VK link */}
           <div style={{ marginTop: 48, textAlign: "center" }}>
             <a
               href={`https://vk.com/${settings.group_id}`}

@@ -37,12 +37,10 @@ export function Header() {
       }}
     >
       <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "0 var(--pad-x)", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
-        {/* Logo */}
         <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
           <img src="/logo.png" alt="Эволюция Провинции" height={32} style={{ height: 32, width: "auto", display: "block" }} />
         </Link>
 
-        {/* Desktop nav */}
         <nav style={{ display: "flex", alignItems: "center", gap: 28 }} className="hidden md:flex">
           {NAV.map((link) => {
             const active = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href.split("#")[0]) && link.href !== "/#faq")
@@ -65,7 +63,6 @@ export function Header() {
           })}
         </nav>
 
-        {/* Mobile burger */}
         <button
           className="md:hidden"
           onClick={() => setOpen(!open)}
@@ -76,7 +73,6 @@ export function Header() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       <div style={{ overflow: "hidden", maxHeight: open ? 400 : 0, opacity: open ? 1 : 0, transition: "max-height .35s var(--ease), opacity .25s var(--ease)", background: "var(--ink-2)", borderTop: open ? "1px solid var(--line)" : "none" }}>
         <nav style={{ display: "flex", flexDirection: "column", padding: "16px var(--pad-x)" }}>
           {NAV.map((link) => {

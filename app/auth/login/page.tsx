@@ -29,11 +29,11 @@ export default function LoginPage() {
         setError(result.error)
         setIsLoading(false)
       } else if (result?.success && result?.redirectTo) {
-        console.log("[v0] Login successful, redirecting to:", result.redirectTo)
+        console.log("Login successful, redirecting to:", result.redirectTo)
         router.push(result.redirectTo)
       }
     } catch (err) {
-      console.error("[v0] Login error:", err)
+      console.error("Login error:", err)
       setError(err instanceof Error ? err.message : "Произошла ошибка")
       setIsLoading(false)
     }
