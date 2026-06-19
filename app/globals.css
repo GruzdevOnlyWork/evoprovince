@@ -1,0 +1,146 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ── Design System ── */
+:root {
+  --acid:       #4ade80;
+  --acid-deep:  #22b85e;
+  --ink:        #0b0b0c;
+  --ink-2:      #131316;
+  --ink-3:      #1a1a1e;
+  --ink-4:      #232329;
+  --ds-white:   #f5f5f0;
+  --ds-muted:   rgba(245,245,240,0.56);
+  --ds-faint:   rgba(245,245,240,0.36);
+  --line:       rgba(245,245,240,0.10);
+  --line-2:     rgba(245,245,240,0.18);
+  --on-acid:    #0b0b0c;
+  --ease:       cubic-bezier(.22,.61,.36,1);
+  --pad-x:      clamp(20px, 5vw, 88px);
+  --maxw:       1360px;
+
+  /* Shadcn/Tailwind compat (dark by default) */
+  --background:             #0b0b0c;
+  --foreground:             #f5f5f0;
+  --card:                   #131316;
+  --card-foreground:        #f5f5f0;
+  --popover:                #1a1a1e;
+  --popover-foreground:     #f5f5f0;
+  --primary:                #4ade80;
+  --primary-foreground:     #0b0b0c;
+  --secondary:              #1a1a1e;
+  --secondary-foreground:   #f5f5f0;
+  --muted:                  #232329;
+  --muted-foreground:       rgba(245,245,240,0.56);
+  --accent:                 #4ade80;
+  --accent-foreground:      #0b0b0c;
+  --destructive:            #ff4444;
+  --destructive-foreground: #f5f5f0;
+  --border:                 rgba(245,245,240,0.10);
+  --input:                  #232329;
+  --ring:                   #4ade80;
+  --chart-1:                #4ade80;
+  --chart-2:                #ff6a3d;
+  --chart-3:                #5ad1ff;
+  --chart-4:                #9b8cff;
+  --chart-5:                #ff7a96;
+  --radius:                 0px;
+  --sidebar:                #131316;
+  --sidebar-foreground:     #f5f5f0;
+  --sidebar-primary:        #4ade80;
+  --sidebar-primary-foreground: #0b0b0c;
+  --sidebar-accent:         #232329;
+  --sidebar-accent-foreground: #f5f5f0;
+  --sidebar-border:         rgba(245,245,240,0.10);
+  --sidebar-ring:           #4ade80;
+}
+
+@theme inline {
+  /* Design system classes: bg-acid, bg-ink-2, etc. */
+  --color-acid:      #4ade80;
+  --color-acid-deep: #22b85e;
+  --color-ink:       #0b0b0c;
+  --color-ink-2:     #131316;
+  --color-ink-3:     #1a1a1e;
+  --color-ink-4:     #232329;
+
+  /* Fonts */
+  --font-display: var(--font-anton, "Anton"), "Archivo", system-ui, sans-serif;
+  --font-sans:    var(--font-archivo, "Archivo"), system-ui, sans-serif;
+  --font-mono:    var(--font-space-mono, "Space Mono"), ui-monospace, monospace;
+
+  /* Shadcn token mappings */
+  --color-background:               var(--background);
+  --color-foreground:               var(--foreground);
+  --color-card:                     var(--card);
+  --color-card-foreground:          var(--card-foreground);
+  --color-popover:                  var(--popover);
+  --color-popover-foreground:       var(--popover-foreground);
+  --color-primary:                  var(--primary);
+  --color-primary-foreground:       var(--primary-foreground);
+  --color-secondary:                var(--secondary);
+  --color-secondary-foreground:     var(--secondary-foreground);
+  --color-muted:                    var(--muted);
+  --color-muted-foreground:         var(--muted-foreground);
+  --color-accent:                   var(--accent);
+  --color-accent-foreground:        var(--accent-foreground);
+  --color-destructive:              var(--destructive);
+  --color-destructive-foreground:   var(--destructive-foreground);
+  --color-border:                   var(--border);
+  --color-input:                    var(--input);
+  --color-ring:                     var(--ring);
+  --color-chart-1:                  var(--chart-1);
+  --color-chart-2:                  var(--chart-2);
+  --color-chart-3:                  var(--chart-3);
+  --color-chart-4:                  var(--chart-4);
+  --color-chart-5:                  var(--chart-5);
+  --radius-sm:  0px;
+  --radius-md:  0px;
+  --radius-lg:  0px;
+  --radius-xl:  0px;
+  --color-sidebar:                  var(--sidebar);
+  --color-sidebar-foreground:       var(--sidebar-foreground);
+  --color-sidebar-primary:          var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:           var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border:           var(--sidebar-border);
+  --color-sidebar-ring:             var(--sidebar-ring);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { background: var(--ink); color: var(--ds-white); }
+}
+
+/* ── Reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+.reveal.in { opacity: 1; transform: none; }
+[data-noanim] .reveal { opacity: 1; transform: none; }
+
+/* delay utilities */
+[data-d="1"] { transition-delay: 0.12s; }
+[data-d="2"] { transition-delay: 0.24s; }
+[data-d="3"] { transition-delay: 0.36s; }
+
+/* ── Ticker ── */
+@keyframes ticker { to { transform: translateX(-50%); } }
+
+/* ── Placeholder ── */
+.ph {
+  background: repeating-linear-gradient(45deg,#1a1a1e 0,#1a1a1e 2px,#131316 2px,#131316 8px);
+}
+
+/* ── Hover helpers (safe in Server Components) ── */
+.card-hover { transition: background .2s; }
+.card-hover:hover { background: var(--ink-3); }
+.btn-acid { background: var(--acid); color: var(--on-acid); transition: background .2s; }
+.btn-acid:hover { background: var(--acid-deep); }
+.btn-ghost-line { border: 1px solid var(--line-2); transition: border-color .2s, background .2s; }
+.btn-ghost-line:hover { border-color: var(--acid); background: rgba(74,222,128,0.05); }
